@@ -24,7 +24,7 @@ CREATE table userDB.userAccts
     activationCode varchar(100),
     
     PRIMARY KEY (userName),
-    FOREIGN KEY (userName) REFERENCES userDB.Users(userName)
+    FOREIGN KEY (userName) REFERENCES userDB.users(userName)
     ON DELETE CASCADE
     ON UPDATE CASCADE
 );
@@ -35,7 +35,7 @@ CREATE table userDB.userProfs
     realName varchar(100) NOT NULL,
     
     PRIMARY KEY (userName),
-    FOREIGN KEY (userName) REFERENCES userDB.Users(userName)
+    FOREIGN KEY (userName) REFERENCES userDB.users(userName)
     ON DELETE CASCADE
     ON UPDATE CASCADE
 );
@@ -46,7 +46,7 @@ CREATE table userDB.emails
     userEmail varchar(255) NOT NULL,
     
     PRIMARY KEY (userName, userEmail),
-    FOREIGN KEY (userName) REFERENCES userDB.Users(userName)
+    FOREIGN KEY (userName) REFERENCES userDB.users(userName)
     ON DELETE CASCADE
     ON UPDATE CASCADE
 );
@@ -61,7 +61,7 @@ CREATE table userDB.bankAccts
     acctBalance INTEGER,
     
     PRIMARY KEY (bankAcctID),
-    FOREIGN KEY (userName) REFERENCES userDB.Users(userName)
+    FOREIGN KEY (userName) REFERENCES userDB.users(userName)
     ON DELETE CASCADE
     ON UPDATE CASCADE
 );
@@ -72,11 +72,11 @@ CREATE table userDB.friends
     friendName varchar(100) NOT NULL,
     
     PRIMARY KEY (userName, friendName),
-    FOREIGN KEY (userName) REFERENCES userDB.Users(userName)
+    FOREIGN KEY (userName) REFERENCES userDB.users(userName)
     ON DELETE CASCADE
     ON UPDATE CASCADE,
     
-    FOREIGN KEY (friendName) REFERENCES userDB.Users(userName)
+    FOREIGN KEY (friendName) REFERENCES userDB.users(userName)
     ON DELETE CASCADE
     ON UPDATE CASCADE
 );
@@ -110,7 +110,7 @@ CREATE table billDB.bills
     userName varchar(100) NOT NULL,
     
     PRIMARY KEY (billID),
-    FOREIGN KEY (userName) REFERENCES userDB.Users(userName)
+    FOREIGN KEY (userName) REFERENCES userDB.users(userName)
     ON DELETE CASCADE
     ON UPDATE CASCADE
 );
@@ -122,7 +122,7 @@ CREATE table billDB.sharing
     permissionType varchar(20) NOT NULL,
     
     PRIMARY KEY (billID,userName),
-    FOREIGN KEY (userName) REFERENCES userDB.Users(userName)
+    FOREIGN KEY (userName) REFERENCES userDB.users(userName)
     ON DELETE CASCADE
     ON UPDATE CASCADE,
     
