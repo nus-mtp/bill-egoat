@@ -71,7 +71,7 @@ CREATE TABLE userDB.userPrefs
 CREATE TABLE userDB.emails
 (
 	userName VARCHAR(100) NOT NULL,
-    userEmail VARCHAR(255) NOT NULL UNIQUE,
+    userEmail VARCHAR(255) NOT NULL,
     isReminderEmail BOOLEAN NOT NULL,
     isRecoveryEmail BOOLEAN NOT NULL,
     
@@ -133,6 +133,8 @@ CREATE TABLE templateDB.templates
     billOrg VARCHAR (100),
     creatorName VARCHAR (100),
     fileImgPath VARCHAR (255),
+    dateCreated DATETIME NOT NULL,
+    dateModified TIMESTAMP,
     
     PRIMARY KEY (templateID),
     FOREIGN KEY (creatorName) REFERENCES userDB.users(userName)
@@ -167,13 +169,9 @@ CREATE TABLE billDB.bills
 	billID INTEGER AUTO_INCREMENT NOT NULL,
     submittedTimeStamp TIMESTAMP NOT NULL,
     billFilePath VARCHAR (255) NOT NULL UNIQUE,
-    userName VARCHAR(100) NOT NULL,
     revisionNo INTEGER NOT NULL,
     
-    PRIMARY KEY (billID),
-    FOREIGN KEY (userName) REFERENCES userDB.Users(userName)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE
+    PRIMARY KEY (billID)
 );
 
 /**
