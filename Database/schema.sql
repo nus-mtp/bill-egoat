@@ -1,3 +1,10 @@
+/**This schema builds the database structure for Bill.eGoat, 
+  *and contains user, template and bill data in a normalised form.
+*/
+
+/**
+  *@desc Initialisation, this section recreates the DB
+*/
 DROP DATABASE IF EXISTS billDB;
 DROP DATABASE IF EXISTS templateDB;
 DROP DATABASE IF EXISTS userDB;
@@ -6,154 +13,204 @@ CREATE DATABASE userDB;
 
 USE userDB;
 
-CREATE table userDB.users
+/**
+  *@desc Username/password table, minimum requirements
+  *for authentication/identification of an account
+*/
+CREATE TABLE userDB.users
 (
-	userName varchar(100) NOT NULL,
-    passwd varchar(41) NOT NULL,
+	userName VARCHAR(100) NOT NULL,
+    passwd VARCHAR(41) NOT NULL,
     
     PRIMARY KEY (userName)
 );
 
-CREATE table userDB.userAccts
+/**
+  *@desc Additional account security measures, such as
+  *activation code, login tracking/logging, privileges
+*/
+CREATE TABLE userDB.userAccts
 (
-	userName varchar(100) NOT NULL,
-    recoveryEmail varchar (255) UNIQUE NOT NULL,
-    accType varchar (20) NOT NULL,
-    failedLoginNo tinyint,
-    isActivated boolean NOT NULL,
-    activationCode varchar(100),
+	userName VARCHAR(100) NOT NULL,
+    isPartnerOrg BOOLEAN,
+    failedLoginNo TINYINT,
+    isActivated BOOLEAN NOT NULL,
+    activationCode VARCHAR(100),
+    lastLoggedIn TIMESTAMP,
     
     PRIMARY KEY (userName),
-    FOREIGN KEY (userName) REFERENCES userDB.users(userName)
+    FOREIGN KEY (userName) REFERENCES userDB.Users(userName)
     ON DELETE CASCADE
     ON UPDATE CASCADE
 );
 
-CREATE table userDB.userProfs
+/**
+  *@desc User profile and preferences, including reminders
+  *,preferred currency and actual name
+*/
+CREATE TABLE userDB.userPrefs
 (
-	userName varchar(100) NOT NULL,
-    realName varchar(100) NOT NULL,
+	userName VARCHAR(100) NOT NULL,
+    realName VARCHAR(100) NOT NULL,
+    isRemindInstant BOOLEAN,
+    remindDaily TIME,
+    remindWeeklyOnDay TINYINT,
+    remindMonthlyOnDay TINYINT,
+    defaultCurrency CHAR(3),
     
     PRIMARY KEY (userName),
-    FOREIGN KEY (userName) REFERENCES userDB.users(userName)
+    FOREIGN KEY (userName) REFERENCES userDB.Users(userName)
     ON DELETE CASCADE
     ON UPDATE CASCADE
 );
 
-CREATE table userDB.emails
+/**
+  *@desc Contains all user emails, including reminder
+  *and recovery emails
+*/
+CREATE TABLE userDB.emails
 (
-	userName varchar(100) NOT NULL,
-    userEmail varchar(255) NOT NULL,
+	userName VARCHAR(100) NOT NULL,
+    userEmail VARCHAR(255) NOT NULL UNIQUE,
+    isReminderEmail BOOLEAN NOT NULL,
+    isRecoveryEmail BOOLEAN NOT NULL,
     
     PRIMARY KEY (userName, userEmail),
-    FOREIGN KEY (userName) REFERENCES userDB.users(userName)
+    FOREIGN KEY (userName) REFERENCES userDB.Users(userName)
     ON DELETE CASCADE
     ON UPDATE CASCADE
 );
 
-CREATE table userDB.bankAccts
+/**
+  *@desc Contains financial account information, users can
+  *indicate which account paid for which expense.
+*/
+CREATE TABLE userDB.financeAccts
 (
-	userName varchar(100) NOT NULL,
-    bankAcctID INTEGER AUTO_INCREMENT NOT NULL,
-    bankAcctNo INTEGER,
-    bankAcctName varchar (100),
-    acctOrg varchar (100),
+	userName VARCHAR(100) NOT NULL,
+    acctID INTEGER AUTO_INCREMENT NOT NULL,
+    acctNo INTEGER,
+    acctName VARCHAR (100),
+    acctOrg VARCHAR (100),
     acctBalance INTEGER,
     
-    PRIMARY KEY (bankAcctID),
-    FOREIGN KEY (userName) REFERENCES userDB.users(userName)
+    PRIMARY KEY (acctID),
+    FOREIGN KEY (userName) REFERENCES userDB.Users(userName)
     ON DELETE CASCADE
     ON UPDATE CASCADE
 );
 
-CREATE table userDB.friends
+/**
+  *@desc Friends list for auto-complete when trying to share
+  *bills
+*/
+CREATE TABLE userDB.friends
 (
-	userName varchar(100) NOT NULL,
-    friendName varchar(100) NOT NULL,
+	userName VARCHAR(100) NOT NULL,
+    friendName VARCHAR(100) NOT NULL,
     
     PRIMARY KEY (userName, friendName),
-    FOREIGN KEY (userName) REFERENCES userDB.users(userName)
+    FOREIGN KEY (userName) REFERENCES userDB.Users(userName)
     ON DELETE CASCADE
     ON UPDATE CASCADE,
     
-    FOREIGN KEY (friendName) REFERENCES userDB.users(userName)
+    FOREIGN KEY (friendName) REFERENCES userDB.Users(userName)
     ON DELETE CASCADE
     ON UPDATE CASCADE
 );
+
 
 CREATE DATABASE templateDB;
 
 USE templateDB;
 
+/**
+  *@desc Contains minimum data to identify a template
+*/
 CREATE TABLE templateDB.templates
 (
 	templateID INTEGER AUTO_INCREMENT NOT NULL,
-    billOrg varchar (100),
-    creatorName varchar (100),
-    fileImgPath varchar (255),
-    fileCoordinatePath varchar (255),
-    extraPayableMap varchar (100),
+    billOrg VARCHAR (100),
+    creatorName VARCHAR (100),
+    fileImgPath VARCHAR (255),
     
     PRIMARY KEY (templateID),
     FOREIGN KEY (creatorName) REFERENCES userDB.users(userName)
+);
+
+
+/**
+  *@desc Holds data for fields in template maps
+*/
+CREATE TABLE templateDB.dataFields
+(
+	templateID INTEGER,
+    dataFieldLabel VARCHAR (100),
+    coordinateLabelX VARCHAR (50),
+    coordinateLabelY VARCHAR (50),
+    
+    PRIMARY KEY (templateID,dataFieldLabel),
+    FOREIGN KEY (templateID) REFERENCES templateDB.templates(templateID)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
 );
 
 CREATE DATABASE billDB;
 
 USE billDB;
 
-CREATE table billDB.bills
+/**
+  *@desc Contains minimum data to identify a particular bill
+*/
+CREATE TABLE billDB.bills
 (
 	billID INTEGER AUTO_INCREMENT NOT NULL,
-    submittedTimeStamp timestamp NOT NULL,
-    billFilePath varchar (255) NOT NULL UNIQUE,
-    userName varchar(100) NOT NULL,
+    submittedTimeStamp TIMESTAMP NOT NULL,
+    billFilePath VARCHAR (255) NOT NULL UNIQUE,
+    userName VARCHAR(100) NOT NULL,
+    revisionNo INTEGER NOT NULL,
     
     PRIMARY KEY (billID),
-    FOREIGN KEY (userName) REFERENCES userDB.users(userName)
+    FOREIGN KEY (userName) REFERENCES userDB.Users(userName)
     ON DELETE CASCADE
     ON UPDATE CASCADE
 );
 
-CREATE table billDB.sharing
+/**
+  *@desc Bill permissions linked to user names.
+  *@params permissionType: 1)Owner 2)Editor 3)View
+*/
+CREATE TABLE billDB.sharing
 (
 	billID INTEGER NOT NULL,
-    userName varchar(100) NOT NULL,
-    permissionType varchar(20) NOT NULL,
+    userName VARCHAR(100) NOT NULL,
+    permissionType TINYINT NOT NULL,
     
     PRIMARY KEY (billID,userName),
-    FOREIGN KEY (userName) REFERENCES userDB.users(userName)
+    FOREIGN KEY (userName) REFERENCES userDB.Users(userName)
     ON DELETE CASCADE
     ON UPDATE CASCADE,
     
     FOREIGN KEY (billID) REFERENCES billDB.bills(billID)
     ON DELETE CASCADE
     ON UPDATE CASCADE
-    
 );
 
-CREATE table billDB.billDetails
+/**
+  *@desc Common bill details such as dates, and
+  *whether it has been cleared, or if it is a copy (ignored during
+  *analysis)
+*/
+CREATE TABLE billDB.billDetails
 (
 	billID INTEGER NOT NULL UNIQUE,
     templateID INTEGER,
-    billSentDate date,
-    billDueDate date,
-    billIsComplete boolean NOT NULL,
-    billIsCopy boolean NOT NULL,
-	billCompleteDateTime datetime,
-    billModifiedTimeStamp timestamp,
-    amtPayable decimal(19,4),
-    amtPaid decimal (19,4),
-    amtBalance decimal (19,4),
-    
-    -- Optional fields for other payments, e.g breakdowns
-    extraPayable1 decimal(19,4),
-    extraPaid1 decimal (19,4),
-    extraBalance decimal (19,4),
-    -- End of optional fields
-    
-    tagString varchar (255),
-    flags varchar (255),
+    billSentDate DATE,
+    billDueDate DATE,
+    billIsComplete BOOLEAN NOT NULL,
+    billIsCopy BOOLEAN NOT NULL,
+	billCompleteDateTime DATETIME,
+    billModifiedTimeStamp TIMESTAMP,
     
     PRIMARY KEY (billID),
     FOREIGN KEY (billID) REFERENCES billDB.bills(billID)
@@ -165,3 +222,76 @@ CREATE table billDB.billDetails
     ON UPDATE CASCADE
 );
 
+/**
+  *@desc Holds all possible fields pertaining to monetary
+  *values within a bill.
+*/
+CREATE TABLE billDB.billAmts
+(
+	billID INTEGER NOT NULL,
+    amtLabel VARCHAR(100) NOT NULL,
+    amt DECIMAL(19,4),
+    currency CHAR(3),
+    
+    PRIMARY KEY (billID,amtLabel),
+    
+    FOREIGN KEY (billID) REFERENCES billDB.bills(billID)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
+);
+
+/**
+  *@desc Holds commonly used tags for auto-completion
+*/
+CREATE TABLE billDB.commonTags
+(
+	tagID INTEGER AUTO_INCREMENT NOT NULL,
+    tagName VARCHAR(50),
+    
+    PRIMARY KEY (tagID)
+);
+
+/**
+  *@desc Holds all tags associated with a certain bill
+*/
+CREATE TABLE billDB.billTags
+(
+	billID INTEGER,
+    tagName VARCHAR(50),
+    
+    PRIMARY KEY (billID,tagName),
+    
+    FOREIGN KEY (billID) REFERENCES billDB.bills(billID)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
+);
+
+/**
+  *@desc Holds all flags associated with a certain bill, including
+  *thresholds and triggers for reminders to be sent.
+*/
+CREATE TABLE billDB.billFlags
+(
+	billID INTEGER,
+    flagName VARCHAR (50) NOT NULL,
+    isFlagged BOOLEAN NOT NULL,
+    isReminderActive BOOLEAN NOT NULL,
+    isAmtTriggered BOOLEAN,
+    isDateTriggered BOOLEAN,
+    
+    triggerDateTime DATETIME,
+    
+    amtLabel VARCHAR (100),
+    thresholdAmt DECIMAL(19,4),
+    comparator VARCHAR (2),
+    
+    PRIMARY KEY (billID,flagName),
+    
+    FOREIGN KEY (billID) REFERENCES billDB.bills(billID)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+    
+    FOREIGN KEY (billID, amtLabel) REFERENCES billDB.billAmts(billID, amtLabel)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
+);
