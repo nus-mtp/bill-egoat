@@ -206,6 +206,7 @@ CREATE TABLE billDB.billDetails
     billSentDate DATE,
     billDueDate DATE,
     billIsComplete BOOLEAN NOT NULL,
+	billIsVerified BOOLEAN NOT NULL,
     billIsCopy BOOLEAN NOT NULL,
 	billCompleteDateTime DATETIME,
     billModifiedTimeStamp TIMESTAMP,
