@@ -26,6 +26,12 @@
 	background-color: #15cdda;
 	border-color: transparent;
 	}
+	
+.btn-primary:hover {
+  color: #ffffff;
+  background-color: #3ae0ec;
+  border-color: transparent;
+}
 
 html {
   font-family: "Berlin Sans FB";
@@ -33,9 +39,33 @@ html {
       -ms-text-size-adjust: 100%;
 }
 
-h1, h2, h3, h4, h5, h6 {
-    font-family: 'Berlin Sans FB';
+h3, h4, h5, h6 {
+	font-family: 'Berlin Sans FB';   
 }
+
+h1{
+	font-family: 'Berlin Sans FB';
+	color: #5c6952;
+	font-size: 55px;
+	font-weight: normal;
+	margin-bottom: 0px;
+}
+
+h2{
+	font-family: 'Berlin Sans FB';
+	color: #979e91;
+	font-size: 28px;
+	font-weight: normal;
+	margin-top: 0px;
+	margin-bottom: 25px;
+}
+
+
+
 p, div {
     font-family: 'Berlin Sans FB';
+}
+
+.well {
+    box-sizing: border-box;
 }
