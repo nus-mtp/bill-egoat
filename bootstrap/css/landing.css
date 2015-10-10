@@ -23,8 +23,13 @@
     background-color: #fbfcfc;
 }
 	
-.btn-primary{
+.btn-primary, .btn-primary:active{
 	background-color: #15cdda;
+	border-color: transparent;
+	}
+	
+.btn-primary.disabled, .btn-primary.disabled:hover, .btn-primary.disabled:active{
+	background-color: #74BAC0;
 	border-color: transparent;
 	}
 	
@@ -36,11 +41,14 @@
 
 .btn-primary#signup{
 	width: 150px;
-	margin-right:35px;
-	margin-top: 35px;
-	margin-left:20px;
-	margin-bottom:25px;
+	
 }
+
+.btn-primary#signupbtn{
+	width: 250px;
+}
+
+
 
 li > a#login{
 	color: #000000;
@@ -62,6 +70,14 @@ h1{
 h2{
 	color: #979e91;
 	font-size: 32px;
+	font-weight: normal;
+	margin-top: 0px;
+	margin-bottom: 25px;
+}
+
+h3{
+	color: #B6BBB2;
+	font-size: 15px;
 	font-weight: normal;
 	margin-top: 0px;
 	margin-bottom: 25px;
