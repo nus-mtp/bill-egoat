@@ -52,9 +52,9 @@
             <a href="#" id="login" data-toggle="modal" data-target="#myModal">Log In</a>
           </li>
           <li>
-			<a href="#signupForm">
-				<button class="btn-primary btn-lg" type="button" id="signup">Sign Up</button>
-			</a>
+            <a href="#signupForm">
+              <button class="btn-primary btn-lg" type="button" id="signup">Sign Up</button>
+            </a>
           </li>
         </ul>
       </div>
@@ -73,41 +73,38 @@
   <div class="col-md-6 text-right">
     <img src="images/landing/promo1.png" alt="Multi-device accessible" />
   </div>
-  <div class="col-md-6" id = "signupForm">
+  <div class="col-md-6" id="signupForm">
     <div class="col-md-9 text-center">
       <div class="well col-md-12">
         <form data-toggle="validator" data-disabled="false">
           <div class="form-group col-md-6">
-            <input type="text" class="form-control" id="firstName" pattern="^[,A-Za-z]{1,}$" placeholder="First Name" required=""
-            data-error="Must be alphabetical" required/>
+            <input type="text" class="form-control" id="firstName" pattern="^[,A-Za-z]{1,}$" placeholder="First Name"
+            data-error="Must be alphabetical" />
             <div class="help-block with-errors"></div>
           </div>
           <div class="form-group col-md-6">
-            <input type="text" class="form-control" id="lastName" pattern="^[,A-Za-z]{1,}$" placeholder="Last Name" required=""
-            data-error="Must be alphabetical" required/>
+            <input type="text" class="form-control" id="lastName" pattern="^[,A-Za-z]{1,}$" placeholder="Last Name"
+            data-error="Must be alphabetical" />
             <div class="help-block with-errors"></div>
           </div>
           <div class="form-group col-md-12">
             <input type="email" class="form-control" id="userEmail" placeholder="Email Address"
-            data-error="This email address is invalid." required/>
+            data-error="This email address is invalid." />
             <div class="help-block with-errors"></div>
           </div>
           <div class="form-group col-md-12">
             <input type="password" class="form-control" id="userPassword" placeholder="Password" pattern="^[A-Za-z0-9@\.+_\-]{6,}$"
-            data-error="Passwords must be minimum 6 characters, alphanumeric or contain the following symbols only: @.-+_"
-            required/>
+            data-error="Passwords must be minimum 6 characters, alphanumeric or contain the following symbols only: @.-+_" />
             <div class="help-block with-errors">Minimum 6 characters</div>
           </div>
           <div class="form-group col-md-12">
             <button type="submit" class="btn btn-primary" id="signupbtn">Sign Up</button>
           </div>
         </form>
-		
-		<div class="col-md-12">
-			<h3>By clicking "Sign Up" I agree to Bill.eGoat's
-			<a href="#">Terms of Service</a>
-			</h3>
-		</div>
+        <div class="col-md-12">
+          <h3>By clicking &quot;Sign Up&quot; I agree to Bill.eGoat&#39;s 
+          <a href="#">Terms of Service</a></h3>
+        </div>
       </div>
     </div>
   </div>
@@ -116,67 +113,51 @@
       <div class="row" id="triangle1"></div>
     </div>
   </a> 
-  
-  
   <!-- Modal -->
-<div id="myModal" class="modal fade" role="dialog">
+  <div id="myModal" class="modal fade" role="dialog">
   <div class="modal-dialog">
-
     <!-- Modal content-->
     <div class="modal-content">
       <div class="modal-header text-center">
-        <button type="button" class="close" data-dismiss="modal"></button>
         <h2 class="modal-title">Login</h2>
       </div>
-	  
       <div class="modal-body row">
-	  <div class ="col-md-2"></div>
-	  <div class="col-md-8 text-center">
-        <form data-toggle="validator" data-disabled="false">
-          <div class="form-group col-md-12">
-            <input type="email" class="form-control" id="userEmail" placeholder="Email Address"
-            data-error="This email address is invalid." required/>
-            <div class="help-block with-errors"></div>
-          </div>
-          <div class="form-group col-md-12">
-            <input type="password" class="form-control" id="userPassword" placeholder="Password" pattern="^[A-Za-z0-9@\.+_\-]{6,}$"
-            data-error="Passwords must be minimum 6 characters, alphanumeric or contain the following symbols only: @.-+_"
-            required/>
-            <div class="help-block with-errors">Minimum 6 characters</div>
-          </div>
-		  
-		  <div class ="form-group col-md-12 text-left">
-		  <label><input type="checkbox" value="" > Keep me logged in</label>
-		  </div>
-          <div class="form-group col-md-12">
-            <button type="submit" class="btn btn-primary" id="signupbtn">Log In</button>
-          </div>
-        </form>
+        <div class="col-md-2"></div>
+        <div class="col-md-8 text-center">
+          <form data-toggle="validator">
+            <div class="form-group col-md-12">
+              <input type="email" class="form-control" id="loginEmail" placeholder="Email Address"
+              data-error="This email address is invalid." />
+              <div class="help-block with-errors"></div>
+            </div>
+            <div class="form-group col-md-12">
+              <input type="password" class="form-control" id="loginPassword" placeholder="Password"
+              pattern="^[A-Za-z0-9@\.+_\-]{6,}$"
+              data-error="Passwords must be minimum 6 characters, alphanumeric or contain the following symbols only: @.-+_" />
+              <div class="help-block with-errors">Minimum 6 characters</div>
+            </div>
+            <div class="form-group col-md-12 text-left">
+              <label>
+              <input type="checkbox" value="" /> Keep me logged in</label>
+            </div>
+            <div class="form-group col-md-12">
+              <button type="submit" class="btn btn-primary" id="loginbtn">Log In</button>
+            </div>
+          </form>
+        </div>
+        <div class="col-md-2"></div>
+        <div class="col-md-12 text-left">
+          <h3>
+            <a href="#">I forgot my password</a>
+          </h3>
+        </div>
       </div>
-	  <div class ="col-md-2"></div>
-	  <div class="col-md-12 text-left">
-	  <h3>
-		<a href="#">I forgot my password</a></h3>
-	</div>
     </div>
-	
-
   </div>
-</div>
-  
-  
-  
-  
-  
-  
-  
-  
-  
   <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-   
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script> 
   <!-- Include all compiled plugins (below), or include individual files as needed -->
    
   <script src="js/bootstrap.min.js"></script> 
-  <script src="js/validator.min.js"></script></body>
+  <script src="js/validator.min.js"></script></div></body>
 </html>

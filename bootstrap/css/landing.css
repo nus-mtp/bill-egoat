@@ -51,7 +51,7 @@
 	
 }
 
-.btn-primary#signupbtn{
+.btn-primary#signupbtn, .btn-primary#loginbtn{
 	width: 250px;
 }
 
