@@ -19,29 +19,16 @@ USE userDB;
 */
 CREATE TABLE userDB.users
 (
-	userName VARCHAR(100) NOT NULL,
+	userID INTEGER AUTO_INCREMENT NOT NULL,
     passwd VARCHAR(41) NOT NULL,
-    
-    PRIMARY KEY (userName)
-);
-
-/**
-  *@desc Additional account security measures, such as
-  *activation code, login tracking/logging, privileges
-*/
-CREATE TABLE userDB.userAccts
-(
-	userName VARCHAR(100) NOT NULL,
+	userEmail VARCHAR(255) NOT NULL,
     isPartnerOrg BOOLEAN,
     failedLoginNo TINYINT,
     isActivated BOOLEAN NOT NULL,
     activationCode VARCHAR(100),
     lastLoggedIn TIMESTAMP,
     
-    PRIMARY KEY (userName),
-    FOREIGN KEY (userName) REFERENCES userDB.Users(userName)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE
+    PRIMARY KEY (userID)
 );
 
 /**
@@ -50,7 +37,7 @@ CREATE TABLE userDB.userAccts
 */
 CREATE TABLE userDB.userPrefs
 (
-	userName VARCHAR(100) NOT NULL,
+	userID INTEGER NOT NULL,
     realName VARCHAR(100) NOT NULL,
     isRemindInstant BOOLEAN,
     remindDaily TIME,
@@ -58,8 +45,8 @@ CREATE TABLE userDB.userPrefs
     remindMonthlyOnDay TINYINT,
     defaultCurrency CHAR(3),
     
-    PRIMARY KEY (userName),
-    FOREIGN KEY (userName) REFERENCES userDB.Users(userName)
+    PRIMARY KEY (userID),
+    FOREIGN KEY (userID) REFERENCES userDB.Users(userID)
     ON DELETE CASCADE
     ON UPDATE CASCADE
 );
@@ -70,13 +57,13 @@ CREATE TABLE userDB.userPrefs
 */
 CREATE TABLE userDB.emails
 (
-	userName VARCHAR(100) NOT NULL,
+	userID INTEGER NOT NULL,
     userEmail VARCHAR(255) NOT NULL,
     isReminderEmail BOOLEAN NOT NULL,
     isRecoveryEmail BOOLEAN NOT NULL,
     
-    PRIMARY KEY (userName, userEmail),
-    FOREIGN KEY (userName) REFERENCES userDB.Users(userName)
+    PRIMARY KEY (userID, userEmail),
+    FOREIGN KEY (userID) REFERENCES userDB.Users(userID)
     ON DELETE CASCADE
     ON UPDATE CASCADE
 );
@@ -87,15 +74,14 @@ CREATE TABLE userDB.emails
 */
 CREATE TABLE userDB.financeAccts
 (
-	userName VARCHAR(100) NOT NULL,
-    acctID INTEGER AUTO_INCREMENT NOT NULL,
+	userID INTEGER NOT NULL,
     acctNo INTEGER,
     acctName VARCHAR (100),
     acctOrg VARCHAR (100),
-    acctBalance INTEGER,
+    acctBalance DECIMAL(19,4),
     
-    PRIMARY KEY (acctID),
-    FOREIGN KEY (userName) REFERENCES userDB.Users(userName)
+    PRIMARY KEY (userID, acctNo),
+    FOREIGN KEY (userID) REFERENCES userDB.Users(userID)
     ON DELETE CASCADE
     ON UPDATE CASCADE
 );
@@ -106,15 +92,15 @@ CREATE TABLE userDB.financeAccts
 */
 CREATE TABLE userDB.friends
 (
-	userName VARCHAR(100) NOT NULL,
-    friendName VARCHAR(100) NOT NULL,
+	userID INTEGER NOT NULL,
+    friendID INTEGER NOT NULL,
     
-    PRIMARY KEY (userName, friendName),
-    FOREIGN KEY (userName) REFERENCES userDB.Users(userName)
+    PRIMARY KEY (userID, friendID),
+    FOREIGN KEY (userID) REFERENCES userDB.Users(userID)
     ON DELETE CASCADE
     ON UPDATE CASCADE,
     
-    FOREIGN KEY (friendName) REFERENCES userDB.Users(userName)
+    FOREIGN KEY (friendID) REFERENCES userDB.Users(userID)
     ON DELETE CASCADE
     ON UPDATE CASCADE
 );
@@ -131,13 +117,13 @@ CREATE TABLE templateDB.templates
 (
 	templateID INTEGER AUTO_INCREMENT NOT NULL,
     billOrg VARCHAR (100),
-    creatorName VARCHAR (100),
+    creatorID INTEGER,
     fileImgPath VARCHAR (255),
     dateCreated DATETIME NOT NULL,
     dateModified TIMESTAMP,
     
     PRIMARY KEY (templateID),
-    FOREIGN KEY (creatorName) REFERENCES userDB.users(userName)
+    FOREIGN KEY (creatorID) REFERENCES userDB.users(userID)
 );
 
 
@@ -181,11 +167,11 @@ CREATE TABLE billDB.bills
 CREATE TABLE billDB.sharing
 (
 	billID INTEGER NOT NULL,
-    userName VARCHAR(100) NOT NULL,
+    userID INTEGER NOT NULL,
     permissionType TINYINT NOT NULL,
     
-    PRIMARY KEY (billID,userName),
-    FOREIGN KEY (userName) REFERENCES userDB.Users(userName)
+    PRIMARY KEY (billID,userID),
+    FOREIGN KEY (userID) REFERENCES userDB.Users(userID)
     ON DELETE CASCADE
     ON UPDATE CASCADE,
     
