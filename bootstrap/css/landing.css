@@ -63,7 +63,7 @@ li > a#login{
 }
 
 html {
-  font-family: "Berlin Sans FB";
+  font-family: "Berlin Sans FB", "Ropa Sans";
 }
 
 h1{
@@ -90,7 +90,7 @@ h3{
 }
 
 p, div {
-    font-family: 'Berlin Sans FB';
+    font-family: 'Berlin Sans FB', "Ropa Sans";
 }
 
 .well {
