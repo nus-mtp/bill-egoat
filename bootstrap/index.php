@@ -137,24 +137,46 @@ if(isset($_POST['signupbtn']) && !empty($_POST['firstName']) && !empty($_POST['l
 		mysql_select_db("userDB") or die(mysql_error()); 
 		$hash=md5( rand(0,1000) );
 		
-		mysql_query("INSERT INTO users (passwd, userEmail, ,isPartnerOrg, failedLoginNo, isActivated, activationCode) VALUES(
+		mysql_query("INSERT INTO users (passwd, userEmail, isPartnerOrg, failedLoginNo, isActivated, activationCode) VALUES(
 		'". mysql_escape_string(md5($userPassword)) ."', 
 		'". mysql_escape_string($userEmail) ."', 
 		FALSE,
 		0,
 		FALSE,
-		'". mysql_escape_string($hash) ."' ") or die(mysql_error());
+		'". mysql_escape_string($hash) ."') ") or die(mysql_error());
 		
 		mysql_query("INSERT INTO emails (userID, userEmail, isReminderEmail, isRecoveryEmail) VALUES(
-		SELECT userID FROM users WHERE userEmail=='".$userEmail."',
+		(SELECT userID FROM users WHERE userEmail='".$userEmail."'),
 		'". mysql_escape_string($userEmail) ."', 
 		TRUE,
 		TRUE)")or die(mysql_error());	
 
 		mysql_query("INSERT INTO userprefs (userID, realName) VALUES(
-		SELECT userID FROM users WHERE userEmail=='".$userEmail."',
+		(SELECT userID FROM users WHERE userEmail='".$userEmail."'),
 		CONCAT_WS(' ','". mysql_escape_string($firstName) ."', '". mysql_escape_string($lastName) ."'
-		))")or die(mysql_error());	
+		))")or die(mysql_error());
+
+		$to      = $userEmail; // Send email to our user
+		$subject = 'Bill.eGoat Account Verification'; // Give the email a subject 
+		$message = '
+ 
+Thanks for signing up with Bill.eGoat!
+Your account has been created, you can login with the following credentials after you have activated your account by pressing the url below.
+ 
+------------------------
+Email address: '.$userEmail.'
+Password: '.$userPassword.'
+------------------------
+ 
+Please click this link to activate your account:
+https://www.billegoat.gq/verify.php?email='.$email.'&hash='.$hash.' 
+
+This is an automatically-generated email, please do not reply to this email.
+ 
+'; // Our message above including the link
+                     
+$headers = 'From:noreply@billegoat.gq' . "\r\n"; // Set from headers
+mail($to, $subject, $message, $headers); // Send our email
 	}
 }
              
