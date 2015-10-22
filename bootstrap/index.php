@@ -73,12 +73,7 @@
   </div>
   <!--End of Navbar-->
   
-  
-  <!-- start PHP code -->
-		<?php
-		mysql_connect("localhost", "root", "ysAb7cEkjvOa") or die(mysql_error()); 
-		mysql_select_db("userDB") or die(mysql_error()); // Select registrations database.
-		?>
+
   
   
   
@@ -135,7 +130,32 @@ if(isset($_POST['signupbtn']) && !empty($_POST['firstName']) && !empty($_POST['l
 	$lastName = mysql_escape_string($_POST['lastName']);
     $userEmail = mysql_escape_string($_POST['userEmail']);
     $userPassword = mysql_escape_string($_POST['userPassword']);
-	echo "wha2t";
+	
+	if(eregi("^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$", $userEmail))
+	{
+    	mysql_connect("localhost", "root", "ysAb7cEkjvOa") or die(mysql_error()); 
+		mysql_select_db("userDB") or die(mysql_error()); 
+		$hash=md5( rand(0,1000) );
+		
+		mysql_query("INSERT INTO users (passwd, userEmail, ,isPartnerOrg, failedLoginNo, isActivated, activationCode) VALUES(
+		'". mysql_escape_string(md5($userPassword)) ."', 
+		'". mysql_escape_string($userEmail) ."', 
+		FALSE,
+		0,
+		FALSE,
+		'". mysql_escape_string($hash) ."' ") or die(mysql_error());
+		
+		mysql_query("INSERT INTO emails (userID, userEmail, isReminderEmail, isRecoveryEmail) VALUES(
+		SELECT userID FROM users WHERE userEmail=='".$userEmail."',
+		'". mysql_escape_string($userEmail) ."', 
+		TRUE,
+		TRUE)")or die(mysql_error());	
+
+		mysql_query("INSERT INTO userprefs (userID, realName) VALUES(
+		SELECT userID FROM users WHERE userEmail=='".$userEmail."',
+		CONCAT_WS(' ','". mysql_escape_string($firstName) ."', '". mysql_escape_string($lastName) ."'
+		))")or die(mysql_error());	
+	}
 }
              
 ?>
