@@ -156,28 +156,6 @@ if(isset($_POST['signupbtn']) && !empty($_POST['firstName']) && !empty($_POST['l
 		CONCAT_WS(' ','". mysql_escape_string($firstName) ."', '". mysql_escape_string($lastName) ."'
 		))")or die(mysql_error());
 
-		$to      = $userEmail; // Send email to our user
-		$subject = 'Bill.eGoat Account Verification'; // Give the email a subject 
-		$message = '
- 
-Thanks for signing up with Bill.eGoat!
-Your account has been created, you can login with the following credentials after you have activated your account by pressing the url below.
- 
-------------------------
-Email address: '.$userEmail.'
-Password: '.$userPassword.'
-------------------------
- 
-Please click this link to activate your account:
-https://www.billegoat.gq/verify.php?email='.$email.'&hash='.$hash.' 
-
-This is an automatically-generated email, please do not reply to this email.
- 
-'; // Our message above including the link
-                     
-$headers = 'From:noreply@billegoat.gq' . "\r\n"; // Set from headers
-mail($to, $subject, $message, $headers); // Send our email
-	}
 }
              
 ?>
