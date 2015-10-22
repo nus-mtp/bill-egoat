@@ -126,38 +126,38 @@
 <?php
 if(isset($_POST['signupbtn']) && !empty($_POST['firstName']) && !empty($_POST['lastName']) && !empty($_POST['userEmail']) && !empty($_POST['userPassword'])  )
 {
-    $firstName = mysql_escape_string($_POST['firstName']);
-	$lastName = mysql_escape_string($_POST['lastName']);
-    $userEmail = mysql_escape_string($_POST['userEmail']);
-    $userPassword = mysql_escape_string($_POST['userPassword']);
+    $firstName =  $mysqli->real_escape_string($_POST['firstName']);
+	$lastName =  $mysqli->real_escape_string($_POST['lastName']);
+    $userEmail =  $mysqli->real_escape_string($_POST['userEmail']);
+    $userPassword =  $mysqli->real_escape_string($_POST['userPassword']);
 	
 	if(eregi("^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$", $userEmail))
 	{
-    	mysql_connect("localhost", "root", "ysAb7cEkjvOa") or die(mysql_error()); 
-		mysql_select_db("userDB") or die(mysql_error()); 
+    	mysqli_connect("localhost", "root", "ysAb7cEkjvOa") or die(mysqli_error()); 
+		mysqli_select_db("userDB") or die(mysqli_error()); 
 		$hash=md5( rand(0,1000) );
 		
 		mysql_query("INSERT INTO users (passwd, userEmail, isPartnerOrg, failedLoginNo, isActivated, activationCode) VALUES(
-		'". mysql_escape_string(md5($userPassword)) ."', 
-		'". mysql_escape_string($userEmail) ."', 
+		'".  $mysqli->real_escape_string(md5($userPassword)) ."', 
+		'".  $mysqli->real_escape_string($userEmail) ."', 
 		FALSE,
 		0,
 		FALSE,
-		'". mysql_escape_string($hash) ."') ") or die(mysql_error());
+		'".  $mysqli->real_escape_string($hash) ."') ") or die(mysqli_error());
 		
-		mysql_query("INSERT INTO emails (userID, userEmail, isReminderEmail, isRecoveryEmail) VALUES(
+		mysqli_query("INSERT INTO emails (userID, userEmail, isReminderEmail, isRecoveryEmail) VALUES(
 		(SELECT userID FROM users WHERE userEmail='".$userEmail."'),
-		'". mysql_escape_string($userEmail) ."', 
+		'".  $mysqli->real_escape_string($userEmail) ."', 
 		TRUE,
-		TRUE)")or die(mysql_error());	
+		TRUE)")or die(mysqli_error());	
 
-		mysql_query("INSERT INTO userprefs (userID, realName) VALUES(
+		mysqli_query("INSERT INTO userprefs (userID, realName) VALUES(
 		(SELECT userID FROM users WHERE userEmail='".$userEmail."'),
-		CONCAT_WS(' ','". mysql_escape_string($firstName) ."', '". mysql_escape_string($lastName) ."'
-		))")or die(mysql_error());
+		CONCAT_WS(' ','".  $mysqli->real_escape_string($firstName) ."', '".  $mysqli->real_escape_string($lastName) ."'
+		))")or die(mysqli_error());
 
 }
-             
+}          
 ?>
 <!-- stop PHP Code -->
 		
@@ -223,4 +223,3 @@ if(isset($_POST['signupbtn']) && !empty($_POST['firstName']) && !empty($_POST['l
   <script src="js/bootstrap.min.js"></script> 
   <script src="js/validator.min.js"></script></div></body>
 </html>
-
