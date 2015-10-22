@@ -46,7 +46,7 @@
 }
 
 .btn-primary#signup{
-	width: 150px;
+	width: 130px;
 	
 }
 
@@ -91,6 +91,13 @@ h3{
 
 p, div {
     font-family: 'Berlin Sans FB', "Ropa Sans";
+}
+
+.row {
+	margin-left:0px;
+	margin-right:0px;
+	padding-left:0px;
+	padding-right:0px;
 }
 
 .well {

@@ -72,6 +72,18 @@
     </nav>
   </div>
   <!--End of Navbar-->
+  
+  
+  <!-- start PHP code -->
+		<?php
+		mysql_connect("localhost", "root", "ysAb7cEkjvOa") or die(mysql_error()); 
+		mysql_select_db("userDB") or die(mysql_error()); // Select registrations database.
+		?>
+  
+  
+  
+  
+  
   <!--Main text headers-->
   <div class="container center-block text-center">
     <h1>Bill management, made simple.</h1>
@@ -86,31 +98,50 @@
   <div class="col-md-6" id="signupForm">
     <div class="col-md-9 text-center">
       <div class="well col-md-12">
-        <form data-toggle="validator" data-disabled="false">
+	  
+	  <!--Signup Form-->
+        <form data-toggle="validator" action="" method="post">
           <div class="form-group col-md-6">
-            <input type="text" class="form-control" id="firstName" pattern="^[,A-Za-z]{1,}$" placeholder="First Name"
-            data-error="Must be alphabetical" />
+            <input type="text" class="form-control" id="firstName" name="firstName" pattern="^[,A-Za-z]{1,}$" placeholder="First Name"
+            data-error="Must be alphabetical" required />
             <div class="help-block with-errors"></div>
           </div>
           <div class="form-group col-md-6">
-            <input type="text" class="form-control" id="lastName" pattern="^[,A-Za-z]{1,}$" placeholder="Last Name"
-            data-error="Must be alphabetical" />
+            <input type="text" class="form-control" id="lastName" name="lastName" pattern="^[,A-Za-z]{1,}$" placeholder="Last Name"
+            data-error="Must be alphabetical" required/>
             <div class="help-block with-errors"></div>
           </div>
           <div class="form-group col-md-12">
-            <input type="email" class="form-control" id="userEmail" placeholder="Email Address"
-            data-error="This email address is invalid." />
+            <input type="email" class="form-control" id="userEmail" name="userEmail" placeholder="Email Address"
+            data-error="This email address is invalid." required />
             <div class="help-block with-errors"></div>
           </div>
           <div class="form-group col-md-12">
-            <input type="password" class="form-control" id="userPassword" placeholder="Password" pattern="^[A-Za-z0-9@\.+_\-]{6,}$"
-            data-error="Passwords must be minimum 6 characters, alphanumeric or contain the following symbols only: @.-+_" />
+            <input type="password" class="form-control" id="userPassword" name="userPassword" placeholder="Password" pattern="^[A-Za-z0-9@\.+_\-]{6,}$"
+            data-error="Passwords must be minimum 6 characters, alphanumeric or contain the following symbols only: @.-+_" required />
             <div class="help-block with-errors">Minimum 6 characters</div>
           </div>
           <div class="form-group col-md-12">
-            <button type="submit" class="btn btn-primary" id="signupbtn">Sign Up</button>
-          </div>
+            <button type="submit" class="btn btn-primary" id="signupbtn" name="signupbtn">Sign Up</button>
+          </div>	  
         </form>
+		
+		
+			  <!-- start PHP code -->
+<?php
+if(isset($_POST['signupbtn']) && !empty($_POST['firstName']) && !empty($_POST['lastName']) && !empty($_POST['userEmail']) && !empty($_POST['userPassword'])  )
+{
+    $firstName = mysql_escape_string($_POST['firstName']);
+	$lastName = mysql_escape_string($_POST['lastName']);
+    $userEmail = mysql_escape_string($_POST['userEmail']);
+    $userPassword = mysql_escape_string($_POST['userPassword']);
+	echo "wha2t";
+}
+             
+?>
+<!-- stop PHP Code -->
+		
+		
         <div class="col-md-12">
           <h3>By clicking &quot;Sign Up&quot; I agree to Bill.eGoat&#39;s 
           <a href="#">Terms of Service</a></h3>
@@ -172,3 +203,4 @@
   <script src="js/bootstrap.min.js"></script> 
   <script src="js/validator.min.js"></script></div></body>
 </html>
+
