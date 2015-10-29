@@ -1,0 +1,114 @@
+.modal{
+	padding-top:15%;
+}
+
+.navbar-default {
+	background-color: #F00FFF;
+	border-color: #c4c7c9;
+	border-bottom-width: 4px;
+	border-top-width: 0px;
+	width:100%;
+}
+
+.navbar-default #subnav{
+	background-color: #000000;
+	border-color: #000000;
+	border-bottom-width: 4px;
+	border-top-width: 0px;
+	width:100%;
+}
+
+.navbar-brand {
+	line-height: 110px;
+    height: 80px;
+    padding-top: 13px;
+	padding-left: 27px;
+}
+.navbar-nav li a {
+    line-height: 90px;
+    height: 80px;
+	padding-left: 24px;
+	padding-right: 4px;
+}
+
+.navbar-nav li a #subnavbar{
+    line-height: 90px;
+    height: 70px;
+	padding-left: 24px;
+	padding-right: 4px;
+}
+
+.navbar-nav>li:hover{
+    color: #fbfcfc;
+    background-color: #fbfcfc;
+}
+	
+.btn-primary, .btn-primary:active{
+	background-color: #15cdda;
+	border-color: transparent;
+	}
+	
+.btn-primary.disabled, .btn-primary.disabled:hover, .btn-primary.disabled:active{
+	background-color: #74BAC0;
+	border-color: transparent;
+	}
+	
+.btn-primary:hover {
+  color: #ffffff;
+  background-color: #3ae0ec;
+  border-color: transparent;
+}
+
+.btn-primary#signup{
+	width: 100px;
+	
+}
+
+
+li > a#login{
+	color: #000000;
+	text-decoration: underline;
+	font-size: 20px;
+}
+
+html {
+  font-family: "Berlin Sans FB", "Ropa Sans";
+}
+
+h1{
+	color: #5c6952;
+	font-size: 65px;
+	font-weight: normal;
+	margin-bottom: 0px;
+}
+
+h2{
+	color: #979e91;
+	font-size: 32px;
+	font-weight: normal;
+	margin-top: 0px;
+	margin-bottom: 25px;
+}
+
+h3{
+	color: #B6BBB2;
+	font-size: 15px;
+	font-weight: normal;
+	margin-top: 0px;
+	margin-bottom: 25px;
+}
+
+p, div {
+    font-family: 'Berlin Sans FB', "Ropa Sans";
+}
+
+.row {
+	margin-left:0px;
+	margin-right:0px;
+	padding-left:0px;
+	padding-right:0px;
+}
+
+label{
+	font-weight:normal;
+}
