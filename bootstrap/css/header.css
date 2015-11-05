@@ -1,90 +1,74 @@
-.modal{
-	padding-top:15%;
-}
-
-.navbar-default {
+#navbar-1 {
 	background-color: #FFFFFF;
 	border-color: #c4c7c9;
 	border-bottom-width: 0px;
 	border-top-width: 0px;
+	margin-bottom: 0px;
+	margin-left:0px;
+	margin-right:0px;
+	margin-top:0px;
+	padding-left:0px;
+	padding-right:0px;
 	width:100%;
+	min-height:50px;
 }
 
-#subnav{
+#navbar-2 {
 	background-color: #16ccd6;
-	border-color: #000000;
+	border-color: #c4c7c9;
 	border-bottom-width: 0px;
 	border-top-width: 0px;
-	padding-top:0px;
+	margin-bottom: 0px;
+	margin-left:0px;
+	margin-right:0px;
+	margin-top:0px;
+	padding-left:0px;
+	padding-right:0px;
 	width:100%;
-	line-height:5px;
-	 min-height:15px; 
+	min-height:20px;
 }
 
-#subnavbar{
-	background-color: #16ccd6;
-	border-color: #000000;
-	border-top-width: 0px;
-	width:100%;
-	padding-top:0px;
+#Add{
+	background-color:#16ccd6;
+	border-radius:24px;
+	border-color: #11a0a8;
+	padding: 5px 8px
 }
 
-#navbar-collapse-2{
-	padding-top:0px;
+#Add:hover
+{
+  background-color: #14b6bf;
+  border-color: #11a0a8;
 }
 
-
-#searchbar{
-	padding-top: 10px;
-}
-.navbar-brand {
-	line-height: 55px;
-    height: 50px;
-    padding-top: 5px;
-	padding-left: 10px;
-}
-.navbar-nav li a {
-    line-height: 0px;
-    height: 10px;
-	font-size: 20px;
-	color:white;
+.navbar-default .navbar-nav>li>a {
+color:#FFFFFF;	
+line-height:18px;
+padding-top:5px;
+padding-bottom:0px;
 }
 
 .navbar-nav>li:hover{
-    color: #000000;
+    color: #fbfcfc;
     background-color: #fbfcfc;
 }
 
-ul.nav li.active a {
-    color: #FFFFFF;
-}
-	
-.btn-primary, .btn-primary:active{
-	background-color: #15cdda;
-	border-color: transparent;
-	}
-	
-.btn-primary.disabled, .btn-primary.disabled:hover, .btn-primary.disabled:active{
-	background-color: #74BAC0;
-	border-color: transparent;
-	}
-	
-.btn-primary:hover {
-  color: #ffffff;
-  background-color: #3ae0ec;
-  border-color: transparent;
+.navbar {
+    margin-bottom:0;
+	width:100%;
+	margin-left:0px;
+	margin-right:0px;
+	min-height:28px;
 }
 
-.btn-primary#signup{
-	width: 100px;
-	
+.navbar-brand {
+	line-height: 30px;
+    height: 30px;
+    padding-top: 7px;
 }
 
-
-li > a#login{
-	color: #000000;
-	text-decoration: underline;
-	font-size: 20px;
+#searchbar{
+	padding-top:7px;
 }
 
 html {
@@ -119,28 +103,17 @@ p, div {
 }
 
 .row {
-	margin-bottom:0px;
+	margin-left:0px;
+	margin-right:0px;
 	padding-left:0px;
 	padding-right:0px;
-	padding-bottom:0px;
 }
 
-#first-row {
-	height:50px;
-}
-
-#second-row {
-	height:30px;
-}
-
-#second-container{
-	margin-bottom:0px;
-	padding-left:0px;
-	padding-right:0px;
-	padding-bottom:0px;
-	height:10px;
-}
-
-label{
-	font-weight:normal;
-}
+.badge-notify{
+   background:red;
+   position:relative;
+   top: 0px;
+   left: -25px;
+   font-family: 'Helvetica';
+   font-size:10px;
+  }
