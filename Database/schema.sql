@@ -45,10 +45,7 @@ CREATE TABLE userDB.userPrefs
     remindMonthlyOnDay TINYINT,
     defaultCurrency CHAR(3),
     
-    PRIMARY KEY (userID),
-    FOREIGN KEY (userID) REFERENCES userDB.Users(userID)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE
+    PRIMARY KEY (userID)
 );
 
 /**
@@ -62,10 +59,8 @@ CREATE TABLE userDB.emails
     isReminderEmail BOOLEAN NOT NULL,
     isRecoveryEmail BOOLEAN NOT NULL,
     
-    PRIMARY KEY (userID, userEmail),
-    FOREIGN KEY (userID) REFERENCES userDB.Users(userID)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE
+    PRIMARY KEY (userID, userEmail)
+ 
 );
 
 /**
@@ -80,10 +75,7 @@ CREATE TABLE userDB.financeAccts
     acctOrg VARCHAR (100),
     acctBalance DECIMAL(19,4),
     
-    PRIMARY KEY (userID, acctNo),
-    FOREIGN KEY (userID) REFERENCES userDB.Users(userID)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE
+    PRIMARY KEY (userID, acctNo)
 );
 
 /**
@@ -95,14 +87,8 @@ CREATE TABLE userDB.friends
 	userID INTEGER NOT NULL,
     friendID INTEGER NOT NULL,
     
-    PRIMARY KEY (userID, friendID),
-    FOREIGN KEY (userID) REFERENCES userDB.Users(userID)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE,
-    
-    FOREIGN KEY (friendID) REFERENCES userDB.Users(userID)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE
+    PRIMARY KEY (userID, friendID)
+
 );
 
 
@@ -122,8 +108,7 @@ CREATE TABLE templateDB.templates
     dateCreated DATETIME NOT NULL,
     dateModified TIMESTAMP,
     
-    PRIMARY KEY (templateID),
-    FOREIGN KEY (creatorID) REFERENCES userDB.users(userID)
+    PRIMARY KEY (templateID)
 );
 
 
@@ -137,10 +122,7 @@ CREATE TABLE templateDB.dataFields
     coordinateLabelX VARCHAR (50),
     coordinateLabelY VARCHAR (50),
     
-    PRIMARY KEY (templateID,dataFieldLabel),
-    FOREIGN KEY (templateID) REFERENCES templateDB.templates(templateID)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE
+    PRIMARY KEY (templateID,dataFieldLabel)
 );
 
 CREATE DATABASE billDB;
@@ -153,10 +135,18 @@ USE billDB;
 CREATE TABLE billDB.bills
 (
 	billID INTEGER AUTO_INCREMENT NOT NULL,
-    submittedTimeStamp TIMESTAMP NOT NULL,
-    billFilePath VARCHAR (255) NOT NULL UNIQUE,
+	userID INTEGER NOT NULL,
+    submittedTimeStamp DATETIME NOT NULL,
+    billFilePath VARCHAR (255) UNIQUE,
     revisionNo INTEGER NOT NULL,
-    
+	templateID INTEGER,
+    billSentDate DATE,
+    billDueDate DATE,
+    billIsComplete BOOLEAN NOT NULL,
+	billIsVerified BOOLEAN NOT NULL,
+    billIsCopy BOOLEAN NOT NULL,
+	billCompleteDateTime DATETIME,
+    billModifiedTimeStamp TIMESTAMP,   
     PRIMARY KEY (billID)
 );
 
@@ -170,41 +160,7 @@ CREATE TABLE billDB.sharing
     userID INTEGER NOT NULL,
     permissionType TINYINT NOT NULL,
     
-    PRIMARY KEY (billID,userID),
-    FOREIGN KEY (userID) REFERENCES userDB.Users(userID)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE,
-    
-    FOREIGN KEY (billID) REFERENCES billDB.bills(billID)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE
-);
-
-/**
-  *@desc Common bill details such as dates, and
-  *whether it has been cleared, or if it is a copy (ignored during
-  *analysis)
-*/
-CREATE TABLE billDB.billDetails
-(
-	billID INTEGER NOT NULL UNIQUE,
-    templateID INTEGER,
-    billSentDate DATE,
-    billDueDate DATE,
-    billIsComplete BOOLEAN NOT NULL,
-	billIsVerified BOOLEAN NOT NULL,
-    billIsCopy BOOLEAN NOT NULL,
-	billCompleteDateTime DATETIME,
-    billModifiedTimeStamp TIMESTAMP,
-    
-    PRIMARY KEY (billID),
-    FOREIGN KEY (billID) REFERENCES billDB.bills(billID)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE,
-    
-    FOREIGN KEY (templateID) REFERENCES templateDB.templates(templateID)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE
+    PRIMARY KEY (billID,userID)
 );
 
 /**
@@ -218,11 +174,7 @@ CREATE TABLE billDB.billAmts
     amt DECIMAL(19,4),
     currency CHAR(3),
     
-    PRIMARY KEY (billID,amtLabel),
-    
-    FOREIGN KEY (billID) REFERENCES billDB.bills(billID)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE
+    PRIMARY KEY (billID,amtLabel)
 );
 
 /**
@@ -244,11 +196,8 @@ CREATE TABLE billDB.billTags
 	billID INTEGER,
     tagName VARCHAR(50),
     
-    PRIMARY KEY (billID,tagName),
-    
-    FOREIGN KEY (billID) REFERENCES billDB.bills(billID)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE
+    PRIMARY KEY (billID,tagName)
+
 );
 
 /**
@@ -270,13 +219,5 @@ CREATE TABLE billDB.billFlags
     thresholdAmt DECIMAL(19,4),
     comparator VARCHAR (2),
     
-    PRIMARY KEY (billID,flagName),
-    
-    FOREIGN KEY (billID) REFERENCES billDB.bills(billID)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE,
-    
-    FOREIGN KEY (billID, amtLabel) REFERENCES billDB.billAmts(billID, amtLabel)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE
+    PRIMARY KEY (billID,flagName)
 );
