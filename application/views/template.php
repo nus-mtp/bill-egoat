@@ -7,6 +7,7 @@
 <style>label { display:block;}</style>
 </head>
 <body>
+<?php $this->load->view('header');?>
 <h1><?php echo $headline;?></h1>
 <?php $this->load->view($include);?>
 </body>
