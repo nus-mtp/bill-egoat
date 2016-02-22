@@ -59,8 +59,7 @@
         <!-- Nav bar content -->
         <ul class="nav navbar-nav navbar-right">
           <li>
-              <?php echo anchor('login', 'Log In', 'class="link-class"') ?>
-            <!--<a href="#" id="login" data-toggle="modal" data-target="#myModal">Log In</a>-->
+            <a href="#" id="login" data-toggle="modal" data-target="#myModal">Log In</a>
           </li>
           <li>
             <a href="#signupForm">
