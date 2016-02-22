@@ -142,10 +142,11 @@ CREATE TABLE billDB.bills
 	templateID INTEGER,
     billSentDate DATE,
     billDueDate DATE,
+	totalAmt DECIMAL (19,4),
     billIsComplete BOOLEAN NOT NULL,
 	billIsVerified BOOLEAN NOT NULL,
     billIsCopy BOOLEAN NOT NULL,
-	billCompleteDateTime DATETIME,
+	billCompleteDateTime DATE,
     billModifiedTimeStamp TIMESTAMP,   
     PRIMARY KEY (billID)
 );
