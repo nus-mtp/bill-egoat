@@ -1,18 +1,28 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
+/* Controller to manually add/update bills
+** @author Daryl Lim
+*/
 class MAddBill extends CI_Controller {
 
-	 public function index()
-	 {
+	// Load pages
+	public function index()
+	{
 		$data['title'] = "Manually Add Bill";
 		$data['headline'] = "Add a Bill Manually";
 		$data['include'] = 'maddbill_view';
 		$this->load->vars($data);
+		
+		// Unit testing: Change to 'TRUE' to run
 		$this->load->library('unit_test');
-		$this->unit->active(TRUE);
+		$this->unit->active(FALSE);
+		
 		$this->load->view('template');
 	 }
 	 
+	/* Function to manually add bills
+	** @author Daryl Lim
+	*/
 	 public function addManualBill()
 	 {
 		// Load the model
@@ -32,6 +42,9 @@ class MAddBill extends CI_Controller {
 		redirect('graph','refresh');
 	}
 		
+	/* Function to manually update bills
+	** @author Daryl Lim
+	*/
 	public function updateBill()
 	{
 		// Load the model

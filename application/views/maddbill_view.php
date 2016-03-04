@@ -1,5 +1,10 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
+<!--
+/* View to manually add bills
+** @author Daryl Lim
+*/
+-->
 	<head>
 		<link href="https://www.billegoat.gq/css/bootstrap-datepicker3.min.css" rel="stylesheet" />
 	</head>
@@ -29,7 +34,6 @@
 
 	<script  src="https://billegoat.gq/js/bootstrap-datepicker.js" />
 	<script>
-		$('.datepicker').datepicker({
-		});
+		$('.datepicker').datepicker({});
 	</script>
 </html>

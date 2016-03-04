@@ -1,4 +1,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
+<!--
+/* View to manually update bills
+** @author Daryl Lim
+*/
+-->
 	<head>
 		<link href="https://www.billegoat.gq/css/bootstrap-datepicker3.min.css" rel="stylesheet" />
 	</head>
@@ -31,9 +36,14 @@
 			<label for="billFilePath">Upload New Bill Image</label>
 			<input type="file" id="image" name="image" value="<?php echo $bills_id['billFilePath']; ?>"/>
 			<br/>
-
+			
+			<label for="billFilePath">Upload New Bill Image</label>
+			<input type="radio" id="isComplete" name="isComplete">
+			<br/>
+			
 			<input type="hidden" name="billID" value="<?php echo $bills_id['billID'];?>">
 			<input type="hidden" name="revisionNo" value="<?php echo $bills_id['revisionNo']+1;?>">
+
 		 
 			<input type="submit" value="Update Bill"/>
 			
@@ -41,7 +51,6 @@
 	</body>
 	<script  src="https://billegoat.gq/js/bootstrap-datepicker.js" />
 	<script>
-		$('.datepicker').datepicker({
-		});
+		$('.datepicker').datepicker({});
 	</script>
 </html>

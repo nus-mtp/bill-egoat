@@ -1,19 +1,14 @@
-
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
- <head>
-   <title>Table of Bills</title>
-     <script src="../js/jquery-latest.js"></script> 
-        <script src="../js/jquery.tablesorter.js"></script> 
-     <script src="http://code.highcharts.com/highcharts.js"></script>
-     
- </head>
- <body>
-
 <h2><?php echo $title; ?></h2>
 
-     
-<!-- TABLE-->     
+<script type="text/javascript" src="js/jquery-latest.js"></script> 
+<script type="text/javascript" src="js/jquery.tablesorter.js"></script> 
+
+$(document).ready(function() 
+    { 
+        $("#myTable").tablesorter(); 
+    } 
+); 
+
 
 <table id="myTable" class="tablesorter"> 
     <thead> 
@@ -42,63 +37,25 @@
         <?php foreach ($bills as $bills_id): ?>
         
         <tr>  
-        <td><?php echo $bills_id['billID']; ?></td>
-        <td><?php echo $bills_id['userID']; ?></td>
-        <td><?php echo $bills_id['billSentDate']; ?></td>
-        <td><?php echo $bills_id['billDueDate']; ?></td>
-        <td><?php echo $bills_id['billIsComplete']; ?></td>
-        <td><?php echo $bills_id['billCompleteDateTime']; ?></td>
-        <td><?php echo $bills_id['billIsVerified']; ?></td>
-        <td><?php echo $bills_id['billIsCopy']; ?></td>
-        <td><?php echo $bills_id['billModifiedTimeStamp']; ?></td>
-        <td><?php echo $bills_id['submittedTimeStamp']; ?></td>
-        <td><?php echo $bills_id['billFilePath']; ?></td>
-        <td><?php echo $bills_id['templateID']; ?></td>
+        <td><?php echo "billID : ".$bills_id['billID']; ?></td>
+        <td><?php echo "billID : ".$bills_id['userID']; ?></td>
+        <td><?php echo "billID : ".$bills_id['billSentDate']; ?></td>
+        <td><?php echo "billID : ".$bills_id['billDueDate']; ?></td>
+        <td><?php echo "billID : ".$bills_id['billIsComplete']; ?></td>
+        <td><?php echo "billID : ".$bills_id['billCompleteDateTime']; ?></td>
+        <td><?php echo "billID : ".$bills_id['billIsVerified']; ?></td>
+        <td><?php echo "billID : ".$bills_id['billIsCopy']; ?></td>
+        <td><?php echo "billID : ".$bills_id['billModifiedTimeStamp']; ?></td>
+        <td><?php echo "billID : ".$bills_id['submittedTimeStamp']; ?></td>
+        <td><?php echo "billID : ".$bills_id['billFilePath']; ?></td>
+        <td><?php echo "billID : ".$bills_id['templateID']; ?></td>
         <td><a href="<?php echo site_url('Graph/viewBill/'.$bills_id['billID']); ?>">View Bill</a></td>
         <td><a href="<?php echo site_url('Graph/updateBill/'.$bills_id['billID']); ?>">Update Bill</a></td>
-        <td><a href="<?php echo site_url('Templates/addTemplateFromBill/'.$bills_id['billID']); ?>">Use Bill to create Template</a></td>
         </tr>
         
         <?php endforeach; ?>     
     </tbody> 
 </table> 
-     
-     
-     
-     
-<!-- GRAPH-->       
-     
-     <div id="container" style="width:100%; height:400px; background-color: grey;"></div>
-     
-     <script>$(function () { 
-    $('#container').highcharts({
-        chart: {
-            type: 'bar'
-        },
-        title: {
-            text: 'Fruit Consumption'
-        },
-        xAxis: {
-            categories: ['Apples', 'Bananas', 'Oranges']
-        },
-        yAxis: {
-            title: {
-                text: 'Fruit eaten'
-            }
-        },
-        series: [{
-            name: 'Jane',
-            data: [1, 0, 4]
-        }, {
-            name: 'John',
-            data: [5, 7, 3]
-        }]
-    });
-}); </script>
-     
-     
-      </body>
-</html>
 
 
 
@@ -132,13 +89,6 @@
 
 -->
 
-<script>
-$(document).ready(function() 
-    { 
-        $("#myTable").tablesorter(); 
-    } 
-); 
-</script>
 
 <p>
    123

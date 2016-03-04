@@ -1,4 +1,8 @@
 <?php
+
+/* Model class to manually add/update bills
+** @author Daryl Lim
+*/
 class Maddbill_model extends CI_Model 
 {
 	function __construct()
@@ -9,7 +13,7 @@ class Maddbill_model extends CI_Model
 		$this->billdb = $CI->load->database('billdb', TRUE);
 	}
 	
-	/*Inserts form fields into DB billdb.bills
+	/* Inserts form fields into DB billdb.bills
 	** @author Daryl Lim
 	** @Parameter: image name to be posted to DB
 	** @Output: Row ID/billID of inserted path
@@ -55,6 +59,11 @@ class Maddbill_model extends CI_Model
 		return $id = $this->db->insert_id();
 	}
     
+	/* Updates form fields into DB billdb.bills
+	** @author Daryl Lim
+	** @Parameter: billID, image name to be posted to DB
+	** @Output: NIL
+	*/
     public function update_bills_table($billID, $imageName) 
     {
 		//Set default amount to 0 instead of NULL if left empty, for graphing purposes
@@ -78,7 +87,6 @@ class Maddbill_model extends CI_Model
 		}
 		
 		//Append text fields to array for posting to DB
-		
 		$new_data = array(
 			'revisionNo' => $this->input->post('revisionNo'), //Default revision upon creation
 			'billSentDate' => $this->input->post('billSentDate'),
@@ -88,11 +96,12 @@ class Maddbill_model extends CI_Model
 		
 		$data = array_merge($data, $new_data);
             
+		//Update DB entry
         $this->billdb->where('billID',$billID);
         return $this->billdb->update('bills',$data);
-        
     }
 	
+	/* Functions unavailable for now
 	public function insert_bill_amts_table()
 	
 	{	
@@ -116,8 +125,11 @@ class Maddbill_model extends CI_Model
 		
 		return $this->billdb->insert('billTags', $data);
 		
-	}
-		
+	}*/
+	
+	/* Uploads a file to server @ root/images/
+	** @author Daryl Lim
+	*/
 	public function upload()
 	{
 		if(isset($_FILES['image']))
@@ -130,20 +142,27 @@ class Maddbill_model extends CI_Model
 			$tmp = explode('.',$_FILES['image']['name']);
 			$file_ext=strtolower(end($tmp));
       
-      
+			// Enforce maximum file size
 			if($file_size > 2097152) 
 			{
 				$errors[]='File size must be less than 2 MB';
 			}
       
+			// TODO: Enforce accepted formats
+			
+			// Upload if no errors
 			if((empty($errors)==true)&&(($_FILES['image']['name'])!=NULL)) 
 			{
+				// TODO: Message sent successful
+				
+				// Generate unique ID for file
 				$uniqueName = uniqid().".".$file_ext;
 				move_uploaded_file($file_tmp, "images/".$uniqueName);  
 				return $uniqueName;
 			}
 			else
 			{
+				// TODO: Alert when fail
 				return NULL;
 			}
 		}
