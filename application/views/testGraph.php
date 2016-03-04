@@ -3,20 +3,26 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
  <head>
    <title>Table of Bills</title>
-     <script src="../js/jquery-latest.js"></script> 
-        <script src="../js/jquery.tablesorter.js"></script> 
+    <script src="../js/jquery-latest.js"></script> 
+    <script src="../js/jquery.tablesorter.js"></script> 
+    <script src="../js/highcharts.js"></script>
+     
  </head>
  <body>
 
 <h2><?php echo $title; ?></h2>
 
+     
+<!-- TABLE-->     
 
 <table id="myTable" class="tablesorter"> 
     <thead> 
     <tr> 
        
         <th>billID</th> 
-        <th>userID</th> 
+        <th>userID</th>
+        <th>totalAmt</th>
+        <th>billOrg</th>
         <th>billSentDate</th> 
         <th>billDueDate</th> 
         <th>billIsComplete</th> 
@@ -29,6 +35,7 @@
         <th>templateID</th>
         <th>View Bill</th> 
         <th>Update Bill</th> 
+        <th>Template</th> 
         
     </tr> 
     </thead>
@@ -40,6 +47,8 @@
         <tr>  
         <td><?php echo $bills_id['billID']; ?></td>
         <td><?php echo $bills_id['userID']; ?></td>
+        <td><?php echo $bills_id['totalAmt']; ?></td>
+        <td><?php echo $bills_id['billOrg']; ?></td>
         <td><?php echo $bills_id['billSentDate']; ?></td>
         <td><?php echo $bills_id['billDueDate']; ?></td>
         <td><?php echo $bills_id['billIsComplete']; ?></td>
@@ -52,11 +61,46 @@
         <td><?php echo $bills_id['templateID']; ?></td>
         <td><a href="<?php echo site_url('Graph/viewBill/'.$bills_id['billID']); ?>">View Bill</a></td>
         <td><a href="<?php echo site_url('Graph/updateBill/'.$bills_id['billID']); ?>">Update Bill</a></td>
+        <td><a href="<?php echo site_url('Templates/addTemplateFromBill/'.$bills_id['billID']); ?>">Use Bill to create Template</a></td>
         </tr>
         
         <?php endforeach; ?>     
     </tbody> 
 </table> 
+     
+     
+     
+     
+<!-- GRAPH-->       
+     
+     <div id="container" style="width:100%; height:400px; background-color: grey;"></div>
+     
+     <script>$(function () { 
+    $('#container').highcharts({
+        chart: {
+            type: 'bar'
+        },
+        title: {
+            text: 'Fruit Consumption'
+        },
+        xAxis: {
+            categories: ['Apples', 'Bananas', 'Oranges']
+        },
+        yAxis: {
+            title: {
+                text: 'Fruit eaten'
+            }
+        },
+        series: [{
+            name: 'Jane',
+            data: [1, 0, 4]
+        }, {
+            name: 'John',
+            data: [5, 7, 3]
+        }]
+    });
+}); </script>
+     
      
       </body>
 </html>
