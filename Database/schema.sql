@@ -136,6 +136,7 @@ CREATE TABLE billDB.bills
 (
 	billID INTEGER AUTO_INCREMENT NOT NULL,
 	userID INTEGER NOT NULL,
+	billOrg VARCHAR (100),
     submittedTimeStamp DATETIME NOT NULL,
     billFilePath VARCHAR (255) UNIQUE,
     revisionNo INTEGER NOT NULL,

@@ -3,9 +3,15 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
  <head>
    <title>Table of Bills</title>
+<<<<<<< HEAD
     <script src="../js/jquery-latest.js"></script> 
     <script src="../js/jquery.tablesorter.js"></script> 
     <script src="../js/highcharts.js"></script>
+=======
+     <script src="../js/jquery-latest.js"></script> 
+        <script src="../js/jquery.tablesorter.js"></script> 
+     <script src="http://code.highcharts.com/highcharts.js"></script>
+>>>>>>> origin/master
      
  </head>
  <body>
