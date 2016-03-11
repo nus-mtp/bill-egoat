@@ -14,12 +14,12 @@
      ?>
 
      
- <?php echo form_open('Templates/addTemplate');?>
+ <?php echo form_open('Templates/addTemplate/'.$bills_id['billID']);?>
      <label for="billingOrgName">Name of billing organization:</label>
      <input type="text" id="billingOrgName" name="billingOrgName"/>
 
      <br/>
-	 <input type="hidden" id="bill_id" name="bill_id"/>
+	 <input type="hidden" id="bill_id" name="bill_id" value="<?php echo $bills_id['billID']; ?>"/>
      <br/>
 	 
      <input type="submit" value="Proceed to create template"/>

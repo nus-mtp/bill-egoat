@@ -38,13 +38,14 @@ public function __construct()
      
  }
      
- public function addTemplate()
+ public function addTemplate($billID = NULL)
  {
     // Load the model
     $this->load->model('Templates_model','',TRUE);
 	$data['templateID'] = $this->Templates_model->insert_templates_table();
-    $bill_id = $this->input->post('bill_id');
-    $data['bill_data'] = $this->Graph_model->get_graphdata($bill_id);
+    
+    $data['bill_data'] = $this->Graph_model->get_graphdata($billID);
+    $data['billFilePath'] = $data['bill_data']['billFilePath'];
     $data['title'] = "Create Template from Bill ".$data['bill_data']['billID'];
     $data['headline'] = "Create Template from Bill ".$data['bill_data']['billID'];
 	$data['include'] = 'drawtemplate';
