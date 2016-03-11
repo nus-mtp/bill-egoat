@@ -2,9 +2,10 @@
 
     require_once('TesseractOCR/TesseractOCR.php');
 
-    $conn = new mysqli('localhost:3306', 'root', 'ysAb7cEkjvOa');
+    mysql_connect('localhost:3306', 'root', 'ysAb7cEkjvOa');
     $sql = "SELECT coordinateLabelX, coordinateLabelY, coordinateLabelX2, coordinateLabelY2 FROM datafields WHERE templateID = 0 AND dataFieldLabel = 'info'";
-$result = $conn->query($sql);
+    mysql_select_db('templatedb');
+    $result = mysql_query($sql);
 
     //$CI = &get_instance();
     //$this->templatedb = $CI->load->database('templatedb', TRUE);
@@ -24,26 +25,14 @@ $result = $conn->query($sql);
     // Set the content type header - in this case image/jpeg
     //header('Content-Type: image/jpeg');
     
-/*
-if ($result->num_rows > 0) {
-    // output data of each row
-    while($row = $result->fetch_assoc()) {
-        $x1 = $row[0];
-        $y1 = $row[1];
-        $x2 = $row[2];
-        $y2 = $row[3];
-    }
-} else {
-    echo "0 results";
-    
+    $row = mysql_fetch_array($result, MYSQL_NUM);
+    $x1 = $row[0];
+    $y1 = $row[1];
+    $x2 = $row[2];
+    $y2 = $row[3];
+   
 
-    echo $x1;
-    echo $y1;
-    echo $x2;
-    echo $y2;
-*/
-
-    $to_crop_array = array('x' => 1700 , 'y' => 0, 'width' => 600, 'height'=> 250);
+    $to_crop_array = array('x' => $x1 , 'y' => $y1, 'width' => $x2, 'height'=> $y2);
     $thumb_im = imagecrop($im, $to_crop_array);
 
     imagejpeg($thumb_im, 'attachments/cropped.jpg', 100);
