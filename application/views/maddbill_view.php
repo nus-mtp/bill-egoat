@@ -11,7 +11,11 @@
 	
 	<body>
 		<?php echo form_open_multipart('MAddBill/addManualBill');?>
-   
+		
+		<label for="billOrg">Billing Organisation:</label>
+		<input type="text" id="billOrg" name="billOrg" placeholder="e.g, Citibank"/>
+		<br/>
+		
 		<label for="billSentDate">Billing Date:</label>
 		<input type="text" id="billSentDate" name="billSentDate" placeholder="YYYY-MM-DD" data-provide="datepicker"/>
 		<br/>
@@ -27,6 +31,16 @@
 		<label for="billFilePath">Upload Bill Image</label>
 		<input type="file" id="image" name="image"/>
 		<br/>
+		
+		<label for="tagName">Tags (Separated by commas)</label>
+		<input type="text" id="tagName" name="tagName" placeholder="e.g, CC,amex,groceries"/>
+		<br/>
+		
+		<label for="billFilePath">Mark as completed?</label>
+		<input type="checkbox" id="isComplete" name="isComplete" onclick = "dynInput(this);">
+		<br/>
+		
+		<div id="insertinputs"></div>
 			 
 		<input type="submit" value="Add Bill"/>
 		<?php echo form_close();?>
@@ -36,4 +50,23 @@
 	<script>
 		$('.datepicker').datepicker({});
 	</script>
+	<script type="text/javascript">
+			 function dynInput(cbox) {
+			  if (cbox.checked) {
+				var input = document.createElement("input");
+				input.type = "text";
+				input.name= "dateCompleted";
+				input.id= "dateCompleted";
+				input.placeholder ="YYYY-MM-DD";
+				input.setAttribute('data-provide','datepicker');
+				var div = document.createElement("div");
+				div.id = "hiddenField";
+				div.innerHTML = "Date Bill Completed:";
+				div.appendChild(input);
+				document.getElementById("insertinputs").appendChild(div);
+			  } else {
+				document.getElementById("hiddenField").remove();
+			  }
+			}
+			</script>
 </html>

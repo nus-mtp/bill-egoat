@@ -20,7 +20,7 @@ class MAddBill extends CI_Controller {
 		$this->load->view('template');
 	 }
 	 
-	/* Function to manually add bills
+	/* Function to manually add bills, called by form
 	** @author Daryl Lim
 	*/
 	 public function addManualBill()
@@ -29,14 +29,10 @@ class MAddBill extends CI_Controller {
 		$this->load->model('Maddbill_model','',TRUE);
 		
 		// Upload file prompt and actual upload
-		$imageName = $this->Maddbill_model->upload();
+		$imgName = $this->Maddbill_model->upload();
 		
 		// Post other text fields to DB
-		$this->Maddbill_model->insert_bills_table($imageName);
-		
-		//Inputs to be added
-		//$this->Maddbill_model->insert_bill_amts_table();
-		//$this->Maddbill_model->insert_bill_tags_table();
+		$this->Maddbill_model->insert_bills($imgName);
 	   
 	   // Load bill summary page
 		redirect('graph','refresh');
@@ -60,5 +56,4 @@ class MAddBill extends CI_Controller {
 		redirect('graph','refresh');
 	}
 }
-
 ?>

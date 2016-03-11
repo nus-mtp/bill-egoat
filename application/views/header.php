@@ -1,3 +1,9 @@
+<!--
+/* Header view containing main banner/navigation
+** @author Daryl Lim
+*/
+-->
+
 <!DOCTYPE html>
 <html lang="en">
 	<head>

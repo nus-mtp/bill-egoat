@@ -10,7 +10,7 @@ class Maddbill_model extends CI_Model
 		parent::__construct();
 		
 		$CI = &get_instance();
-		$this->billdb = $CI->load->database('billdb', TRUE);
+		$this->billdb = $CI->load->database('billdb', TRUE); // Load DB to be used
 	}
 	
 	/* Inserts form fields into DB billdb.bills
@@ -18,114 +18,91 @@ class Maddbill_model extends CI_Model
 	** @Parameter: image name to be posted to DB
 	** @Output: Row ID/billID of inserted path
 	*/
-	public function insert_bills_table($imageName)
-	{	
-		//Set default amount to 0 instead of NULL if left empty, for graphing purposes
-		if ($this->input->post('totalAmt')==NULL){
-			$amt=0;
-		}
-		else
-		{
-			$amt= $this->input->post('totalAmt');
-		}
-		
-		//Set filename to NULL instead of blank if left empty, to avoid duplicate empty str filepaths
-		if ($imageName==NULL){
-			$file=NULL;
-		}
-		else
-		{
-			//Append parent directory to image name
-			$file="images/".$imageName;
-		}
-		
+	public function insert_bills($imgName)
+	{		
 		//Prepare array for posting to DB
 		$data = array(
-			'billFilePath' => $file,
-			'submittedTimestamp' => date("Y-m-d h:m:s",time()), //Automatically post current server time
-			'revisionNo' => 1, //Default revision upon creation
-			'templateID' => 0, //Default for manually entered bill with no template
+		
+			// Compulsory/Default values to post
+			'submittedTimestamp' => date("Y-m-d h:m:s",time()), // Automatically post current server time
+			'revisionNo' => 1, // Default revision upon creation
+			'templateID' => 0, // Default for manually entered bill with no template
+			'billIsVerified' => TRUE, // Default, bill is 'human-verified' as it is manually entered.
+			'billIsCopy' => FALSE, //Default, as bill is original copy
+			
+			// User-entered values, NULL/FALSE if empty
+			'billFilePath' => $this->writeImgPath($imgName),
+			'billOrg' => $this->input->post('billOrg'),
 			'billSentDate' => $this->input->post('billSentDate'),
 			'billDueDate' => $this->input->post('billDueDate'),
-			'totalAmt' => $amt,
-			'billIsComplete' => FALSE, //Default, bill is not complete
-			'billIsVerified' => TRUE, //Default, bill is 'human-verified' as it is manually entered.
-			'billIsCopy' => FALSE, //Default, as bill is original copy
-			'billCompleteDateTime' => NULL,	//Default, bill is not complete and so has no time complete
+			'totalAmt' => $this->setNulltoZero('totalAmt'),
 		);
 		
-		//Post form values to DB
+		// Append flag and date/time if bill is completed
+		$data = $this->postIsComplete($data);
+		
+		// Post form values to bills table and get auto-generated ID
 		$this->billdb->insert('bills', $data);
-		return $id = $this->db->insert_id();
+		$billID = $this->billdb->insert_id();
+		
+		// Post tags to billsDB.billTags
+		$this->postTags($billID);
+		
+		return $billID;
 	}
     
 	/* Updates form fields into DB billdb.bills
 	** @author Daryl Lim
 	** @Parameter: billID, image name to be posted to DB
-	** @Output: NIL
+	** @Output: billID updated
 	*/
-    public function update_bills_table($billID, $imageName) 
-    {
-		//Set default amount to 0 instead of NULL if left empty, for graphing purposes
-		if ($this->input->post('totalAmt')==NULL){
-			$amt=0;
-		}
-		else
-		{
-			$amt= $this->input->post('totalAmt');
-		}
+    public function update_bills_table($billID, $imgName) 
+    {		
+		// Clear existing tags
+		$query = $this->billdb->delete('billTags', array('billID' => $billID));
 		
-		//If no file uploaded, do not replace current file
-		if ($imageName==NULL){
-			$data = array();
-		}
-		else
+		// Delete bill if marked to delete
+		if (isset($_POST['isDelete']))
 		{
-			//Append parent directory to new image name
-			$file="images/".$imageName;
-			$data = array('billFilePath' => $file);
+			// Delete bill
+			$query = $this->billdb->delete('bills', array('billID' => $billID));
 		}
+
+		//Prepare array for posting to DB
+		$data = array(
 		
-		//Append text fields to array for posting to DB
-		$new_data = array(
-			'revisionNo' => $this->input->post('revisionNo'), //Default revision upon creation
+			// Compulsory/Default values to post
+			'billIsVerified' => TRUE, // Default, bill is 'human-verified' as it is manually updated.
+			'revisionNo' => $this->input->post('revisionNo'), // Automatically incremented every update
+			
+			// User-entered values, NULL/FALSE if empty
+			'billOrg' => $this->input->post('billOrg'),
 			'billSentDate' => $this->input->post('billSentDate'),
 			'billDueDate' => $this->input->post('billDueDate'),
-			'totalAmt' => $amt,
+			'totalAmt' => $this->setNulltoZero('totalAmt'),
 		);
 		
-		$data = array_merge($data, $new_data);
-            
-		//Update DB entry
-        $this->billdb->where('billID',$billID);
-        return $this->billdb->update('bills',$data);
+		// Append flag and date/time if bill is completed
+		$data = $this->postIsComplete($data);
+		
+		// Replace existing image if needed
+		if ($imgName != NULL)
+		{
+			$this->del_curr_img($billID); // Delete existing image
+			$imgName = $this->writeImgPath($imgName); // Write new filepath
+			
+			$data_new = array('billFilePath' => $imgName);
+			$data = array_merge($data, $data_new);
+		} 
+		
+		// Update DB entry
+        $this->billdb->where('billID', $billID);
+        $this->billdb->update('bills', $data);
+		
+		$this->postTags($billID);
+		
+		return $billID;
     }
-	
-	/* Functions unavailable for now
-	public function insert_bill_amts_table()
-	
-	{	
-		$data = array(
-			'billID' => 1,
-			'amtLabel' => $this->input->post('amtLabel'),
-			'amt' => $this->input->post('amt'),
-			'currency' => 'SGD',
-		);
-
-		return $this->billdb->insert('billAmts', $data);	
-	}
-	
-	public function insert_bill_tags_table()
-	
-	{	
-		$data = array(
-			'billID' => 1,
-			'tagName' => $this->input->post('tagName'),
-		);
-		
-		return $this->billdb->insert('billTags', $data);
-		
-	}*/
 	
 	/* Uploads a file to server @ root/images/
 	** @author Daryl Lim
@@ -165,6 +142,151 @@ class Maddbill_model extends CI_Model
 				// TODO: Alert when fail
 				return NULL;
 			}
+		}
+	}
+	
+	// ==================================== Private helper functions
+	
+	/* Appends isComplete info to database array if completed, else delete
+	** @author Daryl Lim
+	** @Parameter: Database array, string to be appended
+	** @Output: Database array to be posted
+	*/
+	private function postIsComplete($arr)
+	{
+		// Append completed flag if bill is completed
+		if (isset($_POST['isComplete']))
+		{
+			$dateComplete = array(
+				'billIsComplete' => TRUE,
+				'billCompleteDateTime' => $this->input->post('dateCompleted'));
+			
+			return array_merge($arr, $dateComplete);
+		}
+		else // Flag removed, bill incomplete
+		{
+			$dateComplete = array(
+				'billIsComplete' => TRUE,
+				'billCompleteDateTime' => NULL);
+			
+			return array_merge($arr, $dateComplete);
+		}
+	}
+	
+	/* Parses CSV string into array, trims whitespace and removes duplicate values
+	** @author Daryl Lim
+	** @Parameter: CSV String
+	** @Output: array with unique, trimmed values, else NULL
+	*/
+	private function trimUniqueCSV($csv_str)
+	{
+		if (empty($csv_str) == FALSE) // Check that string is not empty
+		{
+			$strArray = str_getcsv($csv_str); // Convert string to array
+			$strArray = array_unique($strArray); // Remove duplicate values
+			$strArray = array_map('trim', $strArray); // Trim whitespaces
+			
+			return $strArray;
+		}
+		else
+		{
+			return NULL;
+		}
+	}
+	
+	/* Posts tags in form field to billsDB.billTags (INSERT/UPDATE)
+	** @author Daryl Lim
+	** @Parameter: billID to insert/update
+	*/
+	private function postTags($billID)
+	{
+		// Clear existing tags if exists
+		$query = $this->billdb->delete('billTags', array('billID' => $billID));
+		
+		// Parse tag string to array
+		$tagStr = $this->input->post('tagName');
+		$strArray = $this->trimUniqueCSV($tagStr);
+		
+		// Insert each tag into tags table
+		if ($strArray != NULL)
+		{	
+			foreach ($strArray as $tag)
+			{
+				$tagRow = array(
+					'billID' => $billID,
+					'tagName' => $tag,
+				);	
+				$this->billdb->insert('billTags', $tagRow);
+			}
+		}
+	}
+
+	/* Deletes existing image matching bill ID
+	** @author Daryl Lim
+	** @Parameter: billID
+	** @Output: array of SQL tag objects or NULL if no tags
+	*/
+    public function del_curr_img($billID) 
+    {	
+		// Retrieve existing image path
+		$query = $this->billdb->get_where('bills', array('billID' => $billID));
+		$rowData = $query->row();
+		$imgPath = $rowData['billFilePath'];
+		
+		// Delete image
+		unlink($imgPath);
+	}
+	
+	/* Retrieves tags matching bill ID
+	** @author Daryl Lim
+	** @Parameter: billID
+	** @Output: array of SQL tag objects or NULL if no tags
+	*/
+    public function get_tags($billID) 
+    {	
+		$query = $this->billdb->get_where('billTags', array('billID' => $billID));
+		
+		if ($query->num_rows() > 0)
+		{
+			return $query->result_array();
+		}
+		else
+		{
+			return NULL;
+		}
+	}
+	
+	/* Returns 0 IFF form field is empty/null
+	** @author Daryl Lim
+	** @Parameter: String of form field's name
+	** @Output: variable containing 0 or string
+	*/
+	private function setNullToZero($formField)
+	{
+		if ($this->input->post($formField)==NULL)
+		{
+			return 0;
+		}
+		else
+		{
+			return $formField;
+		}
+	}
+	
+	/* Writes image path for uploaded image
+	** @author Daryl Lim
+	** @Parameter: Random, unique image name
+	** @Output: String with image path.
+	*/
+	private function writeImgPath($imgName)
+	{
+		if ($imgName == NULL)
+		{
+			return NULL;
+		}
+		else
+		{
+			return "images/".$imgName;
 		}
 	}
 }
