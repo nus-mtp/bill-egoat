@@ -5,13 +5,12 @@
 */
 -->
 	<head>
+		<!-- CSS -->
 		<link href="https://www.billegoat.gq/css/bootstrap-datepicker3.min.css" rel="stylesheet" />
-					<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+		<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-
 	</head>
 	<body>
-	
 		<?php echo form_open_multipart('MAddBill/updateBill');?>
 		
 		<?php echo "Current Revision: ".$bills_id['revisionNo']?>
@@ -72,14 +71,14 @@
 		<input type="text" id="dateCompleted" name="dateCompleted" placeholder="YYYY-MM-DD" 
 		data-provide="datepicker" value="<?php echo $bills_id['billCompleteDateTime']; ?>"/>
 		
+		<!-- Script to automatically toggle if bill is completed or not -->
 		<script>
-		$('#isComplete').change(function() {
-		$("#dateCompleted").toggle($(this).is(':checked'));
+		$('#isComplete').change(function() 
+		{
+			$("#dateCompleted").toggle($(this).is(':checked'));
 		});
-
 		$('#isComplete').trigger('change');
 		</script>
-		
 		<br/>
 		
 		<label for="billFilePath">Delete bill?</label>
@@ -89,22 +88,14 @@
 		<input type="hidden" name="billID" value="<?php echo $bills_id['billID'];?>">
 		
 		<input type="hidden" name="revisionNo" value="<?php 
-		echo $bills_id['revisionNo']+1; // Auto-increment revision no.
-		?>">
+		echo $bills_id['revisionNo']+1; // Auto-increment revision no.?>">
 		
 		<input type="submit" value="Update Bill"/>
 		
 		<?php echo form_close();?>
 	</body>
-	<script  src="https://billegoat.gq/js/bootstrap-datepicker.js" />
+	<script src="https://billegoat.gq/js/bootstrap-datepicker.js" />
 	<script>
 		$('.datepicker').datepicker({});
-		
-	
-
-    
-
-
 	</script>
-
 </html>

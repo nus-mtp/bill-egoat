@@ -29,6 +29,7 @@ class Maddbill_model extends CI_Model
 			'templateID' => 0, // Default for manually entered bill with no template
 			'billIsVerified' => TRUE, // Default, bill is 'human-verified' as it is manually entered.
 			'billIsCopy' => FALSE, //Default, as bill is original copy
+			'userID' => $this->session->userdata('userID'),
 			
 			// User-entered values, NULL/FALSE if empty
 			'billFilePath' => $this->writeImgPath($imgName),
@@ -74,6 +75,7 @@ class Maddbill_model extends CI_Model
 			// Compulsory/Default values to post
 			'billIsVerified' => TRUE, // Default, bill is 'human-verified' as it is manually updated.
 			'revisionNo' => $this->input->post('revisionNo'), // Automatically incremented every update
+			'userID' => $this->session->userdata('userID'),
 			
 			// User-entered values, NULL/FALSE if empty
 			'billOrg' => $this->input->post('billOrg'),
