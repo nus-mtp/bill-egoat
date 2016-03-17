@@ -1,5 +1,7 @@
 <?php
-//Qiu Yunhan A0101735R
+/* Controller for getting and displaying bill data
+** @author Qiu Yunhan
+*/
 class Graph extends CI_Controller {
 
 	public function __construct()
