@@ -1,4 +1,7 @@
 <?php
+/* View for getting and displaying data from one bill
+** @author Qiu Yunhan
+*/
     echo "userID : ".$bills_id['userID']."<br>";
     echo "submittedTimeStamp : ".$bills_id['submittedTimeStamp']."<br>";
     echo "billFilePath : ".$bills_id['billFilePath']."<br>";
