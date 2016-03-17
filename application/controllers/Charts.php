@@ -1,5 +1,9 @@
-<!--?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');</p-->
-<!--//Qiu Yunhan A0101735R (not yet integrated/ WIP)-->
+<!--?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');</p
+/* Controller to draw charts
+** (Not yet integrated/WIP)
+** @author Qiu Yunhan
+*/
+-->
 
 class Chart extends CI_Controller {
 
