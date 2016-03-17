@@ -36,7 +36,8 @@
 		<br/>
 			 
 		<label for="billFilePath">Upload Bill Image</label>
-		<input type="file" id="image" name="image"/>
+		<input type="file" id="image" name="image" value="<?php echo set_value('image'); ?>"/>
+		<?php echo form_error('image'); ?>
 		<br/>
 		
 		<label for="tagName">Tags (Separated by commas)</label>

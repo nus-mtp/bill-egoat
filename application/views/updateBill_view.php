@@ -24,16 +24,19 @@
 		<label for="billSentDate">Billing Date:</label>
 		<input type="text" id="billSentDate" name="billSentDate" placeholder="YYYY-MM-DD" 
 		data-provide="datepicker" value="<?php echo $bills_id['billSentDate']; ?>"/>
+		<?php echo form_error('billSentDate'); ?>
 		<br/>
 		
 		<label for="billDueDate">Date Due:</label>
 		<input type="text" id="billDueDate" name="billDueDate" placeholder="YYYY-MM-DD" 
 		data-provide="datepicker" value="<?php echo $bills_id['billDueDate']; ?>"/>
+		<?php echo form_error('billDueDate'); ?>
 		<br/>
 		
 		<label for="totalAmt">Total Amount Due ($):</label>
 		<input type="text" id="totalAmt" name="totalAmt" placeholder="e.g, 101.20" 
 		value="<?php echo $bills_id['totalAmt']; ?>"/>
+		<?php echo form_error('totalAmt'); ?>
 		<br/>
 		
 		<label>Current Bill Image Preview </label>
@@ -70,6 +73,7 @@
 		
 		<input type="text" id="dateCompleted" name="dateCompleted" placeholder="YYYY-MM-DD" 
 		data-provide="datepicker" value="<?php echo $bills_id['billCompleteDateTime']; ?>"/>
+		<?php echo form_error('dateCompleted'); ?>
 		
 		<!-- Script to automatically toggle if bill is completed or not -->
 		<script>

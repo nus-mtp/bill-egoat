@@ -107,43 +107,42 @@ class Maddbill_model extends CI_Model
     }
 	
 	/* Uploads a file to server @ root/images/
-	** @author Daryl Lim
+	** @author Tan Tack Poh, modified by Daryl Lim
+	** @Output Unique filepath for uploaded image, or error message
 	*/
 	public function upload()
 	{
 		if(isset($_FILES['image']))
 		{
-			$errors= array();
 			$file_name = $_FILES['image']['name'];
 			$file_size = $_FILES['image']['size'];
 			$file_tmp = $_FILES['image']['tmp_name'];
 			$file_type = $_FILES['image']['type'];
 			$tmp = explode('.',$_FILES['image']['name']);
-			$file_ext=strtolower(end($tmp));
-      
-			// Enforce maximum file size
-			if($file_size > 2097152) 
-			{
-				$errors[]='File size must be less than 2 MB';
-			}
-      
-			// TODO: Enforce accepted formats
+			$file_ext = strtolower(end($tmp)); // Get file extension
 			
-			// Upload if no errors
-			if((empty($errors)==true)&&(($_FILES['image']['name'])!=NULL)) 
+			if (($this->upload_chk_ext($file_ext)) == FALSE) // Illegal file extension
 			{
-				// TODO: Message sent successful
-				
+				return "EXT_ERR";
+			}
+			
+			if (($this->upload_chk_size($file_size)) == FALSE) // Illegal file size
+			{
+				return "SIZE_ERR";
+			}
+			
+			// No errors, and non-null
+			if ((($_FILES['image']['name']) != NULL))
+			{	
 				// Generate unique ID for file
 				$uniqueName = uniqid().".".$file_ext;
 				move_uploaded_file($file_tmp, "images/".$uniqueName);  
 				return $uniqueName;
 			}
-			else
-			{
-				// TODO: Alert when fail
-				return NULL;
-			}
+		}
+		else
+		{
+			return NULL;
 		}
 	}
 	
@@ -289,6 +288,41 @@ class Maddbill_model extends CI_Model
 		else
 		{
 			return "images/".$imgName;
+		}
+	}
+	
+	/* Helper function to validate an uploaded file's extension
+	** @author Tan Tack Poh, modified by Daryl Lim
+	*/
+	private function upload_chk_ext($file_ext)
+	{
+		// Allowed file formats
+		$legal_ext = array("jpeg","jpg","png","gif","pdf","bmp","tiff");
+		
+		// Check for allowed file formats
+		if(in_array($file_ext, $legal_ext) === FALSE)
+		{
+			return FALSE;
+		}
+		else
+		{
+			return TRUE;
+		}
+	}
+
+	/* Helper callback function to validate an uploaded file's size
+	** @author Tan Tack Poh, modified by Daryl Lim
+	*/
+	private function upload_chk_size($file_size)
+	{
+		// Enforce maximum file size
+		if($file_size > 5242880) 
+		{
+			return FALSE;
+		}
+		else
+		{
+			return TRUE;
 		}
 	}
 }

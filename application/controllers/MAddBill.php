@@ -27,7 +27,7 @@ class MAddBill extends CI_Controller {
 	{
 		// Load the model
 		$this->load->model('Maddbill_model','',TRUE);
-	   	
+		
 		// Form Validation
 		$this->load->library('form_validation');
 		$this->form_validation->set_error_delimiters('<div class="error">', '</div>');
@@ -37,6 +37,21 @@ class MAddBill extends CI_Controller {
 		$this->form_validation->set_rules('billSentDate','Bill Sent Date','callback_regex_check');
 		$this->form_validation->set_rules('billDueDate','Bill Due Date','callback_regex_check');
 		$this->form_validation->set_rules('dateCompleted','Date Bill Completed','callback_regex_check');
+		
+		// Attempt upload of image
+		$imgName = $this->Maddbill_model->upload();
+		
+		// Validate image extension
+		if ($this->chk_ext($imgName) == FALSE)
+		{
+			$this->form_validation->set_rules('image','Bill Image','callback_ext');
+		}
+		
+		// Validate image size
+		if ($this->chk_size($imgName) == FALSE)
+		{
+			$this->form_validation->set_rules('image','Bill Image','callback_fsize');
+		}
 		
 		// Routing after validation
 		if ($this->form_validation->run() == FALSE)
@@ -49,9 +64,6 @@ class MAddBill extends CI_Controller {
 		}
 		else
 		{
-			// Upload file prompt and actual upload
-			$imgName = $this->Maddbill_model->upload();
-		
 			// Post other text fields to DB
 			$this->Maddbill_model->insert_bills($imgName);
 			echo "<h1>Successfully added bill!</h1>";
@@ -67,11 +79,20 @@ class MAddBill extends CI_Controller {
 		// Load the model
 		$this->load->model('Maddbill_model','',TRUE);
 		
-		// Upload replacement file
-		$imageName = $this->Maddbill_model->upload();
+		// Attempt upload of image
+		$imgName = $this->Maddbill_model->upload();
 		
-		// Post fields to DB
-		$this->Maddbill_model->update_bills_table($this->input->post('billID'), $imageName);
+		// Validate image extension
+		if ($this->chk_ext($imgName) == FALSE)
+		{
+			$this->form_validation->set_rules('image','Bill Image','callback_ext');
+		}
+		
+		// Validate image size
+		if ($this->chk_size($imgName) == FALSE)
+		{
+			$this->form_validation->set_rules('image','Bill Image','callback_fsize');
+		}
 		
 		// Validation Rules
 		$this->form_validation->set_rules('totalAmt', 'Total Amount', 'decimal');
@@ -90,9 +111,65 @@ class MAddBill extends CI_Controller {
 		}
 		else
 		{
+			// Post fields to DB
+			$this->Maddbill_model->update_bills_table($this->input->post('billID'), $imageName);
 			echo "<h1>Successfully updated bill!</h1>";
 			redirect('graph','refresh');
 		}
+	}
+	
+	// ==================================== Helper functions
+	
+	/* Helper function to check valid file extension
+	** @author Daryl Lim
+	** @Output boolean value if valid/not
+	*/
+	public function chk_ext($imgName)
+	{
+		if ($imgName == "EXT_ERR")
+		{
+			return FALSE;
+		}
+		else
+		{
+			return TRUE;
+		}
+	}
+	
+	/* Helper function to check valid file size
+	** @author Daryl Lim
+	** @Output boolean value if valid/not
+	*/
+	public function chk_size($imgName)
+	{
+		if ($imgName == "SIZE_ERR")
+		{
+			return FALSE;
+		}
+		else
+		{
+			return TRUE;
+		}
+	}
+	
+	// ==================================== Validation callback functions
+	
+	/* Helper callback function to set error message for wrong extension
+	** @author Daryl Lim
+	*/
+	public function ext()
+	{
+		$this->form_validation->set_message('ext', 'Please upload only accepted image formats (jpeg, png, bmp, gif, pdf, tiff)');
+		return FALSE;
+	}
+	
+	/* Helper callback function to set error message for file size
+	** @author Daryl Lim
+	*/
+	public function fsize()
+	{
+		$this->form_validation->set_message('fsize', 'File size must be less than 5 MB');
+		return FALSE;
 	}
 	
 	/* Helper callback function to do regex validation for dates YYYY-MM-DD
