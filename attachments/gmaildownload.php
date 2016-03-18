@@ -1,4 +1,11 @@
 <?php
+
+    //Written by Justin
+
+    /*Automatically goes through unread emails with attachment in the mailbox, and download any attached .pdf files 
+    and rename them according to the timestamp and the sender
+    */
+
 set_time_limit(3000); 
  
 

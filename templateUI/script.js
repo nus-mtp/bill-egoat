@@ -1,3 +1,9 @@
+//Written by Justin
+
+//Draw a rectangle on top of the bill image and save the coordinates of the rectangle as template coordinate
+
+
+
 var doc = document.documentElement;
 var mouseDown = false;
 var firstCornerX, firstCornerY, secondCornerX, secondCornerY;
