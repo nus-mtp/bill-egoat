@@ -1,5 +1,5 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-/* Author: Jorge Torres
+/* Login system by James Ho
  * Description: Login controller class
  */
 class Login extends CI_Controller{
@@ -28,7 +28,7 @@ class Login extends CI_Controller{
 		}else{
 			// If user did validate, 
 			// Send them to members area
-			redirect('home');
+			redirect('Home');
 		}		
 	}
 }
