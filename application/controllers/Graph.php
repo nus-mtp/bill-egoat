@@ -32,8 +32,8 @@ class Graph extends CI_Controller {
         $data['billOrgMths'] = $billOrgByMths;
         
         
-        $data['title'] = "View Bills";
-	    $data['headline'] = "View Bills";
+        $data['title'] = "Graphs";
+	    $data['headline'] = "View All Bills";
 	    $data['include'] = 'testGraph';
         $data['billOrgsJSON'] = json_encode($data['billOrgs']);
          $data['billOrgMthsJSON'] = json_encode($data['billOrgMths']);
@@ -59,9 +59,9 @@ class Graph extends CI_Controller {
             show_404();
         }
 
-        $data['title'] = $data['bills_id']['billID'];
+        $data['title'] = "View Bill ".$data['bills_id']['billID'];
         $data['headline'] = "";
-	    $data['include'] = 'testGraph_id';
+	    $data['include'] = 'viewBill_view';
 	    $this->load->vars($data);
 	    $this->load->view('template');
         
@@ -86,7 +86,7 @@ class Graph extends CI_Controller {
 			show_404();
 		}
 
-		$data['title'] = $data['bills_id']['billID'];
+		$data['title'] = "Update Bill ".$data['bills_id']['billID'];
         
 		$data['headline'] = "";
 		$data['include'] = 'updateBill_view';

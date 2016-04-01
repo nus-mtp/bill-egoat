@@ -136,9 +136,13 @@ class MAddBill extends CI_Controller {
 		}
 		else
 		{
-			// Post fields to DB
+			// Post fields to DB and go to bill view
 			$this->Maddbill_model->update_bills_table($this->input->post('billID'), $imgName);
-			redirect('graph','refresh');
+			$data['title'] = "View Bill ".$data['bills_id']['billID'];
+			$data['headline'] = "";
+			$data['include'] = 'viewBill_view';
+			$this->load->vars($data);
+			$this->load->view('template');
 		}
 	}
 	
