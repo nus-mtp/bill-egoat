@@ -21,40 +21,6 @@ class Templates_model extends CI_Model {
 		return $id = $this->db->insert_id();
 	}
     
-    public function insert_datafields_table()        
-    {
-        $logodata = array(
-            'templateID' => 2,
-            'dataFieldLabel' => "logo",
-            'coordinateLabelX' => $_POST['submissionArray'][0][0],
-            'coordinateLabelY' => $_POST['submissionArray'][0][1],
-            'coordinateLabelX2' => $_POST['submissionArray'][0][2],
-            'coordinateLabelY2' => $_POST['submissionArray'][0][3],
-        );
-        $this->templatedb->insert('datafields', $logodata);
-            
-        $datedata = array(
-            'templateID' => 2,
-            'dataFieldLabel' => "duedate",
-            'coordinateLabelX' => $_POST['submissionArray'][1][0],
-            'coordinateLabelY' => $_POST['submissionArray'][1][1],
-            'coordinateLabelX2' => $_POST['submissionArray'][1][2],
-            'coordinateLabelY2' => $_POST['submissionArray'][1][3],
-        );
-        $this->templatedb->insert('datafields', $datedata);
-            
-        $amountdata = array(
-            'templateID' => 2,
-            'dataFieldLabel' => "amount",
-            'coordinateLabelX' => $_POST['submissionArray'][2][0],
-            'coordinateLabelY' => $_POST['submissionArray'][2][1],
-            'coordinateLabelX2' => $_POST['submissionArray'][2][2],
-            'coordinateLabelY2' => $_POST['submissionArray'][2][3],
-        );
-        $this->templatedb->insert('datafields', $amountdata);
-        
-    }
-    
     public function update_bills_table($billID) 
     {
         $data = array(

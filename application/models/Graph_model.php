@@ -1,4 +1,7 @@
 <?php
+/* Model for getting and displaying bill data
+** @author Qiu Yunhan
+*/
 class Graph_model extends CI_Model{
 
 	public function __construct()

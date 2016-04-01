@@ -1,10 +1,14 @@
 <?php
+/* Controller for getting and displaying bill data
+** @author Qiu Yunhan
+*/
 class Graph extends CI_Controller {
 
 	public function __construct()
 	{
 		parent::__construct();
 		$this->load->model('Graph_model');
+		$this->load->model('Maddbill_model');
 	}
 
 	public function index()
@@ -26,15 +30,16 @@ class Graph extends CI_Controller {
 	public function viewBill($billID = NULL)
 	{
 		$data['bills_id'] = $this->Graph_model->get_graphdata($billID);
-        
+		
+		// Retrieve tags from DB
+		$data['tags'] = $this->Maddbill_model->get_tags($billID);
         
         if (empty($data['bills_id']))
         {
             show_404();
         }
 
-         $data['title'] = $data['bills_id']['billID'];
-        
+        $data['title'] = $data['bills_id']['billID'];
         $data['headline'] = "View Bill ".$data['bills_id']['billID'];
 	    $data['include'] = 'testGraph_id';
 	    $this->load->vars($data);
@@ -49,6 +54,9 @@ class Graph extends CI_Controller {
     {
         
         $data['bills_id'] = $this->Graph_model->get_graphdata($billID);
+		
+		// Retrieve tags from DB
+		$data['tags'] = $this->Maddbill_model->get_tags($billID);
         
         
         if (empty($data['bills_id']))

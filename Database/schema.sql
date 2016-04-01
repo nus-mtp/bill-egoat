@@ -136,16 +136,18 @@ CREATE TABLE billDB.bills
 (
 	billID INTEGER AUTO_INCREMENT NOT NULL,
 	userID INTEGER NOT NULL,
+	billOrg VARCHAR (100),
     submittedTimeStamp DATETIME NOT NULL,
     billFilePath VARCHAR (255) UNIQUE,
     revisionNo INTEGER NOT NULL,
 	templateID INTEGER,
     billSentDate DATE,
     billDueDate DATE,
+	totalAmt DECIMAL (19,4),
     billIsComplete BOOLEAN NOT NULL,
 	billIsVerified BOOLEAN NOT NULL,
     billIsCopy BOOLEAN NOT NULL,
-	billCompleteDateTime DATETIME,
+	billCompleteDateTime DATE,
     billModifiedTimeStamp TIMESTAMP,   
     PRIMARY KEY (billID)
 );

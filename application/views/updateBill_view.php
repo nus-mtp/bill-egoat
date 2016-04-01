@@ -1,49 +1,105 @@
-<?php
-
-    echo "Original Bill Details<br><br>";
-
-    echo "userID : ".$bills_id['userID']."<br>";
-    echo "submittedTimeStamp : ".$bills_id['submittedTimeStamp']."<br>";
-    echo "billFilePath : ".$bills_id['billFilePath']."<br>";
-    echo "revisionNo : ".$bills_id['revisionNo']."<br>";
-    echo "templateID : ".$bills_id['templateID']."<br>";
-    echo "billSentDate : ".$bills_id['billSentDate']."<br>";
-    echo "billDueDate : ".$bills_id['billDueDate']."<br>";
-    echo "billAmount : ".$bills_id['totalAmt']."<br>";
-    echo "billIsComplete : ".$bills_id['billIsComplete']."<br>";
-    echo "billIsVerified : ".$bills_id['billIsVerified']."<br>";
-    echo "billIsCopy : ".$bills_id['billIsCopy']."<br>";
-    echo "billCompleteDateTime : ".$bills_id['billCompleteDateTime']."<br>";
-    echo "billModifiedTimeStamp : ".$bills_id['billModifiedTimeStamp']."<br>";
-
-    echo "<br>"."<br>"."<br>";
-
-    echo form_open('MAddBill/updateBill');?>
-    <h1>Enter Updated Bill Details:</h1>;
-   
-     <label for="billSentDate">Date of Bill (YYYY-MM-DD):</label>
-     <input type="text" size="20" id="billSentDate" name="billSentDate"/>
-     <br/>
-	 
-	<label for="billDueDate">Date Due (YYYY-MM-DD):</label>
-     <input type="text" size="20" id="billDueDate" name="billDueDate"/>
-     <br/>
-	 
-	 <label for="amtLabel">Type of Payment:</label>
-     <input type="text" size="20" id="amtLabel" name="amtLabel"/>
-     <br/>
-	 
-	 <label for="amt">Amount:</label>
-     <input type="text" size="20" id="amt" name="amt"/>
-     <br/>
-	 
-	 <label for="billSentDate">Tag:</label>
-     <input type="text" size="20" id="tagName" name="tagName"/>
-     <br/>
-
-     <input type="hidden" name="billID" value="<?php echo $bills_id['billID'];?>">
-	 
-     <input type="submit" value="Update Bill"/>
-    
-    <?php echo form_close();
-?>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<!--
+/* View to manually update bills
+** @author Daryl Lim
+*/
+-->
+	<head>
+		<!-- CSS -->
+		<link href="https://www.billegoat.gq/css/bootstrap-datepicker3.min.css" rel="stylesheet" />
+		<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+	</head>
+	<body>
+		<?php echo form_open_multipart('MAddBill/updateBill');?>
+		
+		<?php echo "Current Revision: ".$bills_id['revisionNo']?>
+		<br/>
+		
+		<label for="billOrg">Billing Organisation:</label>
+		<input type="text" id="billOrg" name="billOrg" placeholder="e.g, Citibank"
+		value="<?php echo $bills_id['billOrg']; ?>"/>
+		<br/>
+		
+		<label for="billSentDate">Billing Date:</label>
+		<input type="text" id="billSentDate" name="billSentDate" placeholder="YYYY-MM-DD" 
+		data-provide="datepicker" value="<?php echo $bills_id['billSentDate']; ?>"/>
+		<?php echo form_error('billSentDate'); ?>
+		<br/>
+		
+		<label for="billDueDate">Date Due:</label>
+		<input type="text" id="billDueDate" name="billDueDate" placeholder="YYYY-MM-DD" 
+		data-provide="datepicker" value="<?php echo $bills_id['billDueDate']; ?>"/>
+		<?php echo form_error('billDueDate'); ?>
+		<br/>
+		
+		<label for="totalAmt">Total Amount Due ($):</label>
+		<input type="text" id="totalAmt" name="totalAmt" placeholder="e.g, 101.20" 
+		value="<?php echo $bills_id['totalAmt']; ?>"/>
+		<?php echo form_error('totalAmt'); ?>
+		<br/>
+		
+		<label>Current Bill Image Preview </label>
+		<br/>
+		<?php echo '<img src="https://www.billegoat.gq/'.$bills_id['billFilePath'].'" style="max-height: 20%; max-width: 20%;">'; ?>
+		<br/>
+		
+		<label for="billFilePath">Upload New Bill Image</label>
+		<input type="file" id="image" name="image" value="<?php echo $bills_id['billFilePath']; ?>"/>
+		<br/>
+		
+		<label for="tagName">Tags (Separated by commas)</label>
+		<input type="text" id="tagName" name="tagName" placeholder="e.g, CC,amex,groceries" 
+		value = "<?php 
+					if(empty($tags) == FALSE)
+					{
+						foreach ($tags as $tags_item)
+						{ 
+							echo $tags_item['tagName'];
+							echo ",";
+						}
+					}
+				?>">
+		<br/>
+		
+		<label for="billFilePath">Mark as completed?</label>
+		<input type="checkbox" id="isComplete" name="isComplete"
+		<?php 
+			if ($bills_id['billIsComplete'] == TRUE)
+			{
+				echo "checked";
+			}
+		?>>
+		
+		<input type="text" id="dateCompleted" name="dateCompleted" placeholder="YYYY-MM-DD" 
+		data-provide="datepicker" value="<?php echo $bills_id['billCompleteDateTime']; ?>"/>
+		<?php echo form_error('dateCompleted'); ?>
+		
+		<!-- Script to automatically toggle if bill is completed or not -->
+		<script>
+		$('#isComplete').change(function() 
+		{
+			$("#dateCompleted").toggle($(this).is(':checked'));
+		});
+		$('#isComplete').trigger('change');
+		</script>
+		<br/>
+		
+		<label for="billFilePath">Delete bill?</label>
+		<input type="checkbox" id="isDelete" name="isDelete">
+		<br/>
+		
+		<input type="hidden" name="billID" value="<?php echo $bills_id['billID'];?>">
+		
+		<input type="hidden" name="revisionNo" value="<?php 
+		echo $bills_id['revisionNo']+1; // Auto-increment revision no.?>">
+		
+		<input type="submit" value="Update Bill"/>
+		
+		<?php echo form_close();?>
+	</body>
+	<script src="https://billegoat.gq/js/bootstrap-datepicker.js" />
+	<script>
+		$('.datepicker').datepicker({});
+	</script>
+</html>

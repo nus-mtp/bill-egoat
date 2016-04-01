@@ -1,3 +1,9 @@
+<!--
+/* Header view containing main banner/navigation
+** @author Daryl Lim
+*/
+-->
+
 <!DOCTYPE html>
 <html lang="en">
 	<head>
@@ -100,7 +106,7 @@
 				<div class="collapse navbar-collapse" id="navbar-collapse-2">
 					<ul class="nav navbar-nav navbar" id="navbar-2-links">
 						<li><a href="https://www.billegoat.gq/index.php/Home">Dashboard</a></li>
-						<li><a href="https://www.billegoat.gq/index.php/graph/Graph">Graphs</a></li>
+						<li><a href="https://www.billegoat.gq/index.php/Graph">Graphs</a></li>
 						<li><a href="#">Unpaid Bills</a></li>
 						<li><a href="#">Recent Bills</a></li>
 						<li><a href="#">Templates</a></li>
@@ -110,7 +116,9 @@
 		</div>
 	  
 		<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script> 
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 		<!-- Include all compiled plugins (below), or include individual files as needed -->
+               <script src="http://code.highcharts.com/highcharts.js"></script>
+     
 	</head>
 </html>

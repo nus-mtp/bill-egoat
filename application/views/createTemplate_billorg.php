@@ -4,7 +4,7 @@
 
  </head>
  <body>
-    <!--Create Template Input Billing Organization written by James-->
+  
      <?php
      
      echo "Bill Image: <br>";
