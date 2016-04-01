@@ -8,6 +8,15 @@ class MAddBill extends CI_Controller {
 	public function __construct()
 	{
 		parent::__construct();
+		
+		// Check if username exists in session
+		if ($this->session->userdata('userID') === NULL)
+		{
+			// User is not logged in, redirect to login screen
+			$data['msg'] = "Please log in to access page";
+			redirect('login', $data);
+		}
+		
 		$this->load->model('Graph_model');
 		$this->load->model('Maddbill_model');
 	}

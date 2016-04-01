@@ -12,7 +12,18 @@ class Login extends CI_Controller{
 		// Load our view to be displayed
 		// to the user
 		$data['msg'] = $msg;
-		$this->load->view('login_view', $data);
+		
+		// Check if username exists in session
+		if ($this->session->userdata('userID') === NULL)
+		{
+			// User is not logged in, redirect to login screen
+			$this->load->view('login_view', $data);
+		}
+		else
+		{
+			// User is logged in, allow access
+			redirect('Home');
+		} 
 	}
     
 	public function process(){

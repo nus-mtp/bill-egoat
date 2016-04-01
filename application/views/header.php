@@ -57,7 +57,7 @@
 						<span class="icon-bar"></span>
 					</button>
 					 
-					<a class="navbar-brand" href="https://www.billegoat.gq/index.php"> 
+					<a class="navbar-brand" href="https://www.billegoat.gq/index.php/Home"> 
 						<img class="img-responsive" style="max-height:37px" src="https://www.billegoat.gq/images/landing/logo.png" alt="Logo" />
 					</a>
 				</div>
@@ -95,6 +95,13 @@
 									<span class="glyphicon glyphicon-bell"></span>
 								</button>
 								<span class="badge badge-notify">3</span>
+							</a>
+						</li>
+						<li>
+							<a href="https://www.billegoat.gq/index.php/logout">
+								<button class = "btn-primary" id ="navbtn">
+									<span>Logout</span>
+								</button>
 							</a>
 						</li>
 					</ul>

@@ -8,7 +8,7 @@ class Maddbill_model extends CI_Model
 	function __construct()
 	{
 		parent::__construct();
-		
+	
 		$CI = &get_instance();
 		$this->billdb = $CI->load->database('billdb', TRUE); // Load DB to be used
 	}

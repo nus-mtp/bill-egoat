@@ -9,6 +9,14 @@ class Graph extends CI_Controller {
 		parent::__construct();
 		$this->load->model('Graph_model');
 		$this->load->model('Maddbill_model');
+		
+		// Check if username exists in session
+		if ($this->session->userdata('userID') === NULL)
+		{
+			// User is not logged in, redirect to login screen
+			$data['msg'] = "Please log in to access page";
+			redirect('login', $data);
+		}
 	}
 
 	public function index()
@@ -62,27 +70,28 @@ class Graph extends CI_Controller {
         //$this->load->view('templates/footer');
 	}
     
-    public function updateBill($billID = NULL)
-    {
-        
-        $data['bills_id'] = $this->Graph_model->get_graphdata($billID);
+	/* Shows view to update bills
+	** @author Daryl Lim
+	** @Parameter: billID to be updated
+	*/
+	public function updateBill($billID = NULL)
+	{
+		$data['bills_id'] = $this->Graph_model->get_graphdata($billID);
 		
 		// Retrieve tags from DB
 		$data['tags'] = $this->Maddbill_model->get_tags($billID);
-        
-        
-        if (empty($data['bills_id']))
-        {
-            show_404();
-        }
+		
+		if (empty($data['bills_id']))
+		{
+			show_404();
+		}
 
-         $data['title'] = $data['bills_id']['billID'];
+		$data['title'] = $data['bills_id']['billID'];
         
-        $data['headline'] = "";
-	    $data['include'] = 'updateBill_view';
-	    $this->load->vars($data);
-	    $this->load->view('template');
-        
-    }
+		$data['headline'] = "";
+		$data['include'] = 'updateBill_view';
+		$this->load->vars($data);
+		$this->load->view('template'); 
+	}
 }
 ?>

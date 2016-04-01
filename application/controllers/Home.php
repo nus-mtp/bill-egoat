@@ -4,6 +4,14 @@
 	function __construct(){
 		parent::__construct();
 		$this->check_isvalidated();
+		
+		// Check if username exists in session
+		if ($this->session->userdata('userID') === NULL)
+		{
+			// User is not logged in, redirect to login screen
+			$data['msg'] = "Please log in to access page";
+			redirect('login', $data);
+		}
 	}
 	
 	public function index(){
