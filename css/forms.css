@@ -1,0 +1,81 @@
+/* CSS for forms pages
+** @author Daryl Lim
+*/
+html {
+  font-family: "Berlin Sans FB", "Ropa Sans";
+}
+
+.modal{
+	padding-top:15%;	
+}
+
+.error{
+	color: red;
+}
+
+.btn-primary, .btn-primary:active{
+	background-color: #15cdda;
+	border-color: transparent;
+	}
+	
+.btn-primary.disabled, .btn-primary.disabled:hover, .btn-primary.disabled:active{
+	background-color: #74BAC0;
+	border-color: transparent;
+	}
+	
+.btn-primary:hover {
+  color: #ffffff;
+  background-color: #3ae0ec;
+  border-color: transparent;
+}
+
+.btn-primary#warn.disabled, .btn-primary#warn.disabled:hover, .btn-primary#warn.disabled:active{
+	background-color: #798481;
+	border-color: transparent;
+	}
+
+.btn-primary#warn, .btn-primary#warn:active{
+	background-color: #ff0000;
+	border-color: transparent;
+}
+
+.btn-primary#warn:hover {
+  color: #ffffff;
+  background-color: #ff6666;
+  border-color: transparent;
+}
+
+
+
+h1{
+	color: #5c6952;
+	font-size: 65px;
+	font-weight: normal;
+	margin-bottom: 0px;
+}
+
+h2{
+	color: #979e91;
+	font-size: 32px;
+	font-weight: normal;
+	margin-top: 0px;
+	margin-bottom: 25px;
+}
+
+h3{
+	color: #000000;
+	font-size: 20px;
+	font-weight: normal;
+	margin-top: 0px;
+	margin-bottom: 25px;
+}
+
+p, div {
+    font-family: 'Berlin Sans FB', "Ropa Sans";
+}
+
+label{
+	color: #000000;
+	font-size: 20px;
+	font-weight: normal;
+}

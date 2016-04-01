@@ -14,11 +14,22 @@ class Graph extends CI_Controller {
 	public function index()
 	{
 		$data['bills'] = $this->Graph_model->get_graphdata();
-        //$data['title'] = 'Graph';
+        $data['billOrgs'] = $this->Graph_model->get_billOrgs();
+       
+        $billOrgByMths = array();
+        foreach ( $data['billOrgs'] as $billingOrg){
+            array_push($billOrgByMths, $this->Graph_model->get_billOrgMonths($billingOrg['billOrg']));  
+        }
+        
+        $data['billOrgMths'] = $billOrgByMths;
+        
         
         $data['title'] = "View Bills";
 	    $data['headline'] = "View Bills";
 	    $data['include'] = 'testGraph';
+        $data['billOrgsJSON'] = json_encode($data['billOrgs']);
+         $data['billOrgMthsJSON'] = json_encode($data['billOrgMths']);
+        
 	    $this->load->vars($data);
 	    $this->load->view('template');
 
@@ -29,6 +40,7 @@ class Graph extends CI_Controller {
 
 	public function viewBill($billID = NULL)
 	{
+        //Retrieves bill data from db
 		$data['bills_id'] = $this->Graph_model->get_graphdata($billID);
 		
 		// Retrieve tags from DB
@@ -40,7 +52,7 @@ class Graph extends CI_Controller {
         }
 
         $data['title'] = $data['bills_id']['billID'];
-        $data['headline'] = "View Bill ".$data['bills_id']['billID'];
+        $data['headline'] = "";
 	    $data['include'] = 'testGraph_id';
 	    $this->load->vars($data);
 	    $this->load->view('template');
@@ -66,7 +78,7 @@ class Graph extends CI_Controller {
 
          $data['title'] = $data['bills_id']['billID'];
         
-        $data['headline'] = "Update Bill ".$data['bills_id']['billID'];
+        $data['headline'] = "";
 	    $data['include'] = 'updateBill_view';
 	    $this->load->vars($data);
 	    $this->load->view('template');

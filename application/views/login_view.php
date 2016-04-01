@@ -7,7 +7,7 @@
 </head>
 <body>
 	<div id='login_form'>
-		<form action='process' method='post' name='process'>
+		<form action='Login/process' method='post' name='process'>
 			<h2>User Login</h2>
 			<br />
 			<?php if(! is_null($msg)) echo $msg;?>			

@@ -1,3 +1,11 @@
+/* CSS for template header
+** @author Daryl Lim
+*/
+.modal{
+	padding-top:15%;
+	
+}
+
 #navbar-1 {
 	background-color: #FFFFFF;
 	border-color: #c4c7c9;
@@ -32,13 +40,16 @@
 	background-color:#16ccd6;
 	border-radius:24px;
 	border-color: #11a0a8;
-	padding: 5px 8px
+	padding-top:5px;
+	padding: 5px 8px;
 }
 
 #Add:hover
 {
   background-color: #14b6bf;
   border-color: #11a0a8;
+  padding-top:5px;
+  padding: 5px 8px;
 }
 
 .navbar-default .navbar-nav>li>a {

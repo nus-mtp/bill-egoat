@@ -33,7 +33,7 @@ class Maddbill_model extends CI_Model
 			
 			// User-entered values, NULL/FALSE if empty
 			'billFilePath' => $this->writeImgPath($imgName),
-			'billOrg' => $this->input->post('billOrg'),
+			'billOrg' => $this->setNulltoUnknown('billOrg'),
 			'billSentDate' => $this->input->post('billSentDate'),
 			'billDueDate' => $this->input->post('billDueDate'),
 			'totalAmt' => $this->setNulltoZero('totalAmt'),
@@ -61,13 +61,6 @@ class Maddbill_model extends CI_Model
     {		
 		// Clear existing tags
 		$query = $this->billdb->delete('billTags', array('billID' => $billID));
-		
-		// Delete bill if marked to delete
-		if (isset($_POST['isDelete']))
-		{
-			// Delete bill
-			$query = $this->billdb->delete('bills', array('billID' => $billID));
-		}
 
 		//Prepare array for posting to DB
 		$data = array(
@@ -78,7 +71,7 @@ class Maddbill_model extends CI_Model
 			'userID' => $this->session->userdata('userID'),
 			
 			// User-entered values, NULL/FALSE if empty
-			'billOrg' => $this->input->post('billOrg'),
+			'billOrg' => $this->setNulltoUnknown('billOrg'),
 			'billSentDate' => $this->input->post('billSentDate'),
 			'billDueDate' => $this->input->post('billDueDate'),
 			'totalAmt' => $this->setNulltoZero('totalAmt'),
@@ -105,6 +98,22 @@ class Maddbill_model extends CI_Model
 		
 		return $billID;
     }
+
+	/* Deletes a bill from billDB.bills
+	** @author Daryl Lim
+	** @Parameter: billID
+	*/
+    public function delete_bills_table($billID) 
+    {		
+		// Clear existing tags
+		$query = $this->billdb->delete('billTags', array('billID' => $billID));
+		
+		// Delete bill and image
+		$this->del_curr_img($billID);
+		$query = $this->billdb->delete('bills', array('billID' => $billID));
+
+		return $billID;
+    }
 	
 	/* Uploads a file to server @ root/images/
 	** @author Tan Tack Poh, modified by Daryl Lim
@@ -112,7 +121,7 @@ class Maddbill_model extends CI_Model
 	*/
 	public function upload()
 	{
-		if(isset($_FILES['image']))
+		if($_FILES['image']['size'] != 0)
 		{
 			$file_name = $_FILES['image']['name'];
 			$file_size = $_FILES['image']['size'];
@@ -121,22 +130,31 @@ class Maddbill_model extends CI_Model
 			$tmp = explode('.',$_FILES['image']['name']);
 			$file_ext = strtolower(end($tmp)); // Get file extension
 			
+			// Generate unique ID for file
+			$uniqueName = uniqid().".".$file_ext;
+			move_uploaded_file($file_tmp, "images/".$uniqueName);  
+				
 			if (($this->upload_chk_ext($file_ext)) == FALSE) // Illegal file extension
 			{
+				if(file_exists($uniqueName))
+				{
+					unlink($uniqueName);
+				}
 				return "EXT_ERR";
 			}
 			
 			if (($this->upload_chk_size($file_size)) == FALSE) // Illegal file size
 			{
+				if(file_exists($uniqueName))
+				{
+					unlink($uniqueName);
+				}
 				return "SIZE_ERR";
 			}
 			
 			// No errors, and non-null
 			if ((($_FILES['image']['name']) != NULL))
 			{	
-				// Generate unique ID for file
-				$uniqueName = uniqid().".".$file_ext;
-				move_uploaded_file($file_tmp, "images/".$uniqueName);  
 				return $uniqueName;
 			}
 		}
@@ -167,7 +185,7 @@ class Maddbill_model extends CI_Model
 		else // Flag removed, bill incomplete
 		{
 			$dateComplete = array(
-				'billIsComplete' => TRUE,
+				'billIsComplete' => FALSE,
 				'billCompleteDateTime' => NULL);
 			
 			return array_merge($arr, $dateComplete);
@@ -225,17 +243,19 @@ class Maddbill_model extends CI_Model
 	/* Deletes existing image matching bill ID
 	** @author Daryl Lim
 	** @Parameter: billID
-	** @Output: array of SQL tag objects or NULL if no tags
 	*/
     public function del_curr_img($billID) 
     {	
 		// Retrieve existing image path
 		$query = $this->billdb->get_where('bills', array('billID' => $billID));
 		$rowData = $query->row();
-		$imgPath = $rowData['billFilePath'];
+		$imgPath = $rowData->billFilePath;
 		
 		// Delete image
-		unlink($imgPath);
+		if(file_exists($imgPath))
+		{
+			unlink($imgPath);
+		}
 	}
 	
 	/* Retrieves tags matching bill ID
@@ -257,6 +277,23 @@ class Maddbill_model extends CI_Model
 		}
 	}
 	
+	/* Returns "Unknown" IFF form field is empty/null
+	** @author Daryl Lim
+	** @Parameter: String of form field's name
+	** @Output: variable containing string
+	*/
+	private function setNulltoUnknown($formField)
+	{
+		if ($this->input->post($formField)==NULL)
+		{
+			return "Unknown";
+		}
+		else
+		{
+			return $this->input->post($formField);
+		}
+	}
+	
 	/* Returns 0 IFF form field is empty/null
 	** @author Daryl Lim
 	** @Parameter: String of form field's name
@@ -270,7 +307,7 @@ class Maddbill_model extends CI_Model
 		}
 		else
 		{
-			return $formField;
+			return $this->input->post($formField);
 		}
 	}
 	

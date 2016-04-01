@@ -5,11 +5,18 @@
 */
 class MAddBill extends CI_Controller {
 
+	public function __construct()
+	{
+		parent::__construct();
+		$this->load->model('Graph_model');
+		$this->load->model('Maddbill_model');
+	}
+
 	// Load pages
 	public function index()
 	{
 		$data['title'] = "Manually Add Bill";
-		$data['headline'] = "Add a Bill";
+		$data['headline'] = "";
 		$data['include'] = 'maddbill_view';
 		$this->load->vars($data);
 		
@@ -24,10 +31,7 @@ class MAddBill extends CI_Controller {
 	** @author Daryl Lim
 	*/
 	public function addManualBill()
-	{
-		// Load the model
-		$this->load->model('Maddbill_model','',TRUE);
-		
+	{	
 		// Form Validation
 		$this->load->library('form_validation');
 		$this->form_validation->set_error_delimiters('<div class="error">', '</div>');
@@ -53,11 +57,11 @@ class MAddBill extends CI_Controller {
 			$this->form_validation->set_rules('image','Bill Image','callback_fsize');
 		}
 		
-		// Routing after validation
+		// Routing after failing validation
 		if ($this->form_validation->run() == FALSE)
 		{
 			$data['title'] = "Manually Add Bill";
-			$data['headline'] = "Add a Bill";
+			$data['headline'] = "";
 			$data['include'] = 'maddbill_view';
 			$this->load->vars($data);
 			$this->load->view('template');
@@ -65,9 +69,18 @@ class MAddBill extends CI_Controller {
 		else
 		{
 			// Post other text fields to DB
-			$this->Maddbill_model->insert_bills($imgName);
-			echo "<h1>Successfully added bill!</h1>";
-			redirect('graph','refresh');
+			$billID = $this->Maddbill_model->insert_bills($imgName);
+			
+			// Retrieve bill info
+			$data['bills_id'] = $this->Graph_model->get_graphdata($billID);
+			$data['tags'] = $this->Maddbill_model->get_tags($billID);
+			
+			// Redirect to verification/update bill
+			$data['title'] = "Update/Verify Bill";
+			$data['headline'] = "";
+			$data['include'] = 'updateBill_view';
+			$this->load->vars($data);
+			$this->load->view('template');
 		}
 	}
 	
@@ -76,8 +89,11 @@ class MAddBill extends CI_Controller {
 	*/
 	public function updateBill()
 	{
-		// Load the model
-		$this->load->model('Maddbill_model','',TRUE);
+		$data['bills_id'] = $this->Graph_model->get_graphdata($this->input->post('billID'));
+		
+		// Form Validation
+		$this->load->library('form_validation');
+		$this->form_validation->set_error_delimiters('<div class="error">', '</div>');
 		
 		// Attempt upload of image
 		$imgName = $this->Maddbill_model->upload();
@@ -104,7 +120,7 @@ class MAddBill extends CI_Controller {
 		if ($this->form_validation->run() == FALSE)
 		{
 			$data['title'] = "Update Bill";
-			$data['headline'] = "Update Existing Bill";
+			$data['headline'] = "";
 			$data['include'] = 'updateBill_view';
 			$this->load->vars($data);
 			$this->load->view('template');
@@ -112,10 +128,18 @@ class MAddBill extends CI_Controller {
 		else
 		{
 			// Post fields to DB
-			$this->Maddbill_model->update_bills_table($this->input->post('billID'), $imageName);
-			echo "<h1>Successfully updated bill!</h1>";
+			$this->Maddbill_model->update_bills_table($this->input->post('billID'), $imgName);
 			redirect('graph','refresh');
 		}
+	}
+	
+	/* Function to manually delete bills
+	** @author Daryl Lim
+	*/
+	public function deleteBill()
+	{
+		$this->Maddbill_model->delete_bills_table($this->input->post('billID'));
+		redirect('graph','refresh');
 	}
 	
 	// ==================================== Helper functions
@@ -195,6 +219,32 @@ class MAddBill extends CI_Controller {
 		else
 		{
 			return TRUE;
+		}
+	}
+	
+	/* Helper callback function to do regex validation for money
+	** @author Daryl Lim
+	** @Parameter string input by user to be checked
+	** @Output boolean true if input is null or valid money amount
+	*/
+	public function money_check($str)
+	{
+		// First check if decimal
+		if(parent::decimal($str))
+		{
+			return TRUE;
+		}
+		else // Check if integer
+		{
+			if (parent::integer($str))
+			{
+				return TRUE;
+			}
+			else
+			{
+				$this->form_validation->set_message('money_check', 'Value must be in integer or decimal form.');
+				return FALSE;
+			}
 		}
 	}
 }

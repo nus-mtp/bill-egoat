@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <title>TEMPLATE CREATION</title>
-
+    <!--Template creation written by James-->
     <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
     <style type="text/css" media="screen">
         canvas {
@@ -21,6 +21,7 @@
         <button id="submitLogo">Submit as Logo</button>
         <button id="submitDate">Submit as Due Date</button>
         <button id="submitAmount">Submit as Amount Due</button>
+        <button id="saveCoords">Save locations for the template</button>
     
     </p>
     <div id="canvas">
