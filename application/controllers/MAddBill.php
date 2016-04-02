@@ -46,7 +46,7 @@ class MAddBill extends CI_Controller {
 		$this->form_validation->set_error_delimiters('<div class="error">', '</div>');
 		
 		// Validation Rules
-		$this->form_validation->set_rules('totalAmt', 'Total Amount', 'decimal');
+		$this->form_validation->set_rules('totalAmt', 'Total Amount', 'numeric');
 		$this->form_validation->set_rules('billSentDate','Bill Sent Date','callback_regex_check');
 		$this->form_validation->set_rules('billDueDate','Bill Due Date','callback_regex_check');
 		$this->form_validation->set_rules('dateCompleted','Date Bill Completed','callback_regex_check');
@@ -120,7 +120,7 @@ class MAddBill extends CI_Controller {
 		}
 		
 		// Validation Rules
-		$this->form_validation->set_rules('totalAmt', 'Total Amount', 'decimal');
+		$this->form_validation->set_rules('totalAmt', 'Total Amount', 'numeric');
 		$this->form_validation->set_rules('billSentDate','Bill Sent Date','callback_regex_check');
 		$this->form_validation->set_rules('billDueDate','Bill Due Date','callback_regex_check');
 		$this->form_validation->set_rules('dateCompleted','Date Bill Completed','callback_regex_check');
@@ -220,6 +220,10 @@ class MAddBill extends CI_Controller {
 		{
 			// Accept empty strings
 			if ($str == NULL)
+			{
+				return TRUE;
+			}
+			else if ($str == "0000-00-00")
 			{
 				return TRUE;
 			}
