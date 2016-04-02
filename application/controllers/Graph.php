@@ -1,8 +1,10 @@
 <?php
 /* Controller for getting and displaying bill data
 ** @author Qiu Yunhan
+** @reviewer Daryl Lim
 */
-class Graph extends CI_Controller {
+class Graph extends CI_Controller
+{
 
 	public function __construct()
 	{
@@ -21,57 +23,57 @@ class Graph extends CI_Controller {
 
 	public function index()
 	{
+		// Retrieve all billing data for user
 		$data['bills'] = $this->Graph_model->get_graphdata();
-        $data['billOrgs'] = $this->Graph_model->get_billOrgs();
-       
-        $billOrgByMths = array();
-        foreach ( $data['billOrgs'] as $billingOrg){
-            array_push($billOrgByMths, $this->Graph_model->get_billOrgMonths($billingOrg['billOrg']));  
-        }
-        
-        $data['billOrgMths'] = $billOrgByMths;
-        
-        
-        $data['title'] = "Graphs";
-	    $data['headline'] = "View All Bills";
-	    $data['include'] = 'testGraph';
-        $data['billOrgsJSON'] = json_encode($data['billOrgs']);
-         $data['billOrgMthsJSON'] = json_encode($data['billOrgMths']);
-        
-	    $this->load->vars($data);
-	    $this->load->view('template');
+		
+		// Retrieve all billing data, grouped by billOrgs
+		$data['billOrgs'] = $this->Graph_model->get_billOrgs();
+		
+		// Retrieve all monthly data for each billOrg
+		$billOrgByMths = array();
 
-        //$this->load->view('header', $data);
-        //$this->load->view('testGraph',$data);
-        //$this->load->view('templates/footer');
+		foreach ( $data['billOrgs'] as $billOrg)
+		{
+			array_push($billOrgByMths, $this->Graph_model->get_billOrgMonths($billOrg['billOrg']));  
+		}
+		
+		$data['billOrgMths'] = $billOrgByMths;
+		$data['title'] = "Bill Overview";
+		$data['headline'] = "Bill Overview";
+		$data['include'] = 'testGraph';
+		$data['billOrgsJSON'] = json_encode($data['billOrgs']);
+		$data['billOrgMthsJSON'] = json_encode($data['billOrgMths']);
+        
+		$this->load->vars($data);
+		$this->load->view('template');
 	}
 
+	/* Shows view to update bills
+	** @author Qiu Yunhan, modified by Daryl Lim
+	** @Parameter: billID to be updated
+	*/
 	public function viewBill($billID = NULL)
 	{
-        //Retrieves bill data from db
+		//Retrieves bill data from db
 		$data['bills_id'] = $this->Graph_model->get_graphdata($billID);
-		
+
 		// Retrieve tags from DB
 		$data['tags'] = $this->Maddbill_model->get_tags($billID);
-        
-        if (empty($data['bills_id']))
-        {
-            show_404();
-        }
 
-        $data['title'] = "View Bill ".$data['bills_id']['billID'];
-        $data['headline'] = "";
-	    $data['include'] = 'viewBill_view';
-	    $this->load->vars($data);
-	    $this->load->view('template');
-        
-        //$this->load->view('header', $data);
-        //$this->load->view('testgraph_id', $data);
-        //$this->load->view('templates/footer');
+		if (empty($data['bills_id']))
+		{
+			show_404();
+		}
+		
+		$data['title'] = "View Bill ".$data['bills_id']['billID'];
+		$data['headline'] = "";
+		$data['include'] = 'viewBill_view';
+		$this->load->vars($data);
+		$this->load->view('template');
 	}
     
 	/* Shows view to update bills
-	** @author Daryl Lim
+	** @author Qiu Yunhan, modified by Daryl Lim
 	** @Parameter: billID to be updated
 	*/
 	public function updateBill($billID = NULL)

@@ -1,123 +1,128 @@
 <!--
 /* View for getting and displaying bill data
 ** @author Qiu Yunhan
+** @reviewer Daryl Lim
 */
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
- <head>
-   <title>Table of Bills</title>
-    <script src="../js/jquery-latest.js"></script> 
-    <script src="../js/jquery.tablesorter.js"></script> 
-    <script src="https://billegoat.gq/js/highcharts.js"></script>
- </head>
- <body>
+	<head>
+		<script src="../js/jquery-latest.js"></script> 
+		<script src="../js/jquery.tablesorter.js"></script> 
+		<script src="../js/highcharts.js"></script>
+		<script src="../js/drilldown.js"></script>
+	</head>
 
-<h2><?php echo $title; ?></h2>
+	<body>
 
-     
-    
-     
 <!-- GRAPH-->  
 
-     
-    <div id="container" style="width:100%; height:600px; background-color: grey;"></div>
-     
-    <script>
-    
-    $(function () {
-    // Create the chart
-        $('#container').highcharts({
-            chart: {
-                type: 'pie'
-            },
-            title: {
-                text: 'User Spending'
-            },
-            subtitle: {
-                text: 'By Billing Organisations'
-            },
-            plotOptions: {
-                series: {
-                    dataLabels: {
-                        enabled: true,
-                        format: '{point.name}: ${point.y:.1f}'
-                    }
-                }
-            },
+	<div id="container" style="width:100%; height:600px; background-color: grey;"></div> 
 
-            tooltip: {
-                headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-                pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>${point.y:.2f}</b> <br/>'
-            },
-            series: [{
-                name: 'Bill Organisations',
-                colorByPoint: true,
-                data: [ <?php 
+	<script>
+		$(function () 
+		{
+			// Create the chart
+			$('#container').highcharts(
+			{
+				chart: 
+				{
+					type: 'pie'
+				},
+				title: 
+				{
+					text: 'User Spending'
+				},
+				subtitle: 
+				{
+					text: 'By Billing Organisations'
+				},
+				plotOptions: 
+				{
+					series: 
+					{
+						dataLabels: // Label display format. Name: $amt
+						{
+							enabled: true,
+							format: '{point.name}: ${point.y:.1f}'
+						}
+					}
+				},
 
-                        $last = count($billOrgs);
-                        $counter = 1;
+				tooltip: {
+					headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+					pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>${point.y:.2f}</b> <br/>'
+				},
+				series: [ // Display all billing organisations with summed amount
+				{
+					name: 'Bill Organisations',
+					colorByPoint: true,
+					data: [ <?php 
+							$last = count($billOrgs);
+							$counter = 1;
 
-                        foreach ($billOrgs as $row) {
-                            echo "{name: '".$row['billOrg']."',";
-                            echo "y: ".$row['sum'].",";
-                            echo "drilldown: '".$row['billOrg']."'}";
-            
+							foreach ($billOrgs as $row) 
+							{
+								echo "{name: '".$row['billOrg']."',";
+								echo "y: ".$row['sum'].",";
+								echo "drilldown: '".$row['billOrg']."'}";
+								
+								// Add "," if not the last entry
+								if ($counter != $last)
+								{
+									echo ",";
+									$counter++;
+								}
+							}
+						?>]
+					}],
+					
+					// Drilldown (Allows user to expand into months
+					drilldown: 
+					{
+						series:[ <?php 
 
-                            if ($counter != $last){
-                                echo ",";
-                                $counter++;
-                            }
-
-                        }
-                    ?>]
-                 }],
-                
-            //----------drilldown here
-             drilldown: {
-                    series:[ <?php 
-
-                        $last = count($billOrgMths);
-                        $counter = 0;
-     
-                        foreach ($billOrgMths as $row)
-                        {
-                           
-                            echo "{name: '".$row[0]['billOrg']."',";
-                            echo "id: '".$row[0]['billOrg']."',";
-                            echo "data: [";
-                            
-                            $end = count($row);
-                            $i = 0; 
-                            foreach ($row as $mth)
-                            {
-                                 echo "['".$mth['month']."',".$mth['sum']. "]";
-                                  if ($i != $end-1)
-                                  {
-                                    echo ",";
-                                    $i++;
-                                  }
-                            }
-                            
-                            echo "]}";
-                            
-                            if ($counter != $last-1)
-                            {
-                                 echo ",";
-                                 $counter++;
-                            }
-       
-                         }
-                                
-                        
-                    ?>]
-             }
-     
-            //--------
-            
-        });
-    });
-     </script>     
+							$last = count($billOrgMths);
+							$counter = 0;
+		 
+							foreach ($billOrgMths as $row)
+							{
+							   
+								echo "{name: '".$row[0]['billOrg']."',";
+								echo "id: '".$row[0]['billOrg']."',";
+								echo "data: [";
+								
+								$end = count($row);
+								$i = 0; 
+								foreach ($row as $mth)
+								{
+									 echo "['".$mth['month']."',".$mth['sum']. "]";
+									  if ($i != $end-1)
+									  {
+										echo ",";
+										$i++;
+									  }
+								}
+								
+								echo "]}";
+								
+								if ($counter != $last-1)
+								{
+									 echo ",";
+									 $counter++;
+								}
+		   
+							 }
+									
+							
+						?>]
+				 }
+		 
+				//--------
+				
+			});
+		});
+	</script>     
      
 <!-- TABLE-->     
 
@@ -231,12 +236,7 @@
 
                         }
                     ?>
-         
-     
-
-     
-     
- </body>
+</body>
 </html>
 
 
@@ -278,8 +278,3 @@ $(document).ready(function()
     } 
 ); 
 </script>
-
-<p>
-   123
-    ---    TEST GRAPH PAGE LOADED---- 
-</p>

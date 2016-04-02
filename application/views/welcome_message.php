@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <!--
 /* Landing page
-** @author Daryl Lim
+** @author Daryl Lim, PHP & Porting (Login/Signup) by James Ho
 */
 -->
 <html lang="en">
