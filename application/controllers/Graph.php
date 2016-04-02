@@ -36,10 +36,36 @@ class Graph extends CI_Controller
 		{
 			array_push($billOrgByMths, $this->Graph_model->get_billOrgMonths($billOrg['billOrg']));  
 		}
+			
+		// Retrieve years of bills
+		$data['billYears'] = $this->Graph_model->get_billYears();
+		
+		// Retrieve months per year of bills
+		$billMonths = array();
+		
+		foreach ( $data['billYears'] as $row)
+		{
+			array_push($billMonths, $this->Graph_model->get_Months($row['year']));
+		}
+		
+		// Retrieve total and monthly amounts per year
+		$billYearTotal = array();
+		$billYearAvg = array();
+
+		foreach ( $data['billYears'] as $row)
+		{
+			array_push($billYearTotal, $this->Graph_model->get_MthlyStats($row['year'],FALSE));
+			array_push($billYearAvg, $this->Graph_model->get_MthlyStats($row['year'],TRUE)); 
+		}
+
+		$data['billMonths'] = $billMonths;
+		
+		$data['billYearTotal'] = $billYearTotal;
+		$data['billYearAvg'] = $billYearAvg;
 		
 		$data['billOrgMths'] = $billOrgByMths;
 		$data['title'] = "Bill Overview";
-		$data['headline'] = "Bill Overview";
+		$data['headline'] = "";
 		$data['include'] = 'testGraph';
 		$data['billOrgsJSON'] = json_encode($data['billOrgs']);
 		$data['billOrgMthsJSON'] = json_encode($data['billOrgMths']);

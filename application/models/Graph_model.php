@@ -56,4 +56,55 @@ class Graph_model extends CI_Model
 		
 		return $query->result_array();
 	}
+
+	/* Retrieves distinct years for bills for logged in user
+	** @author Daryl Lim
+	** @Output: Array of years by user
+	*/	
+	public function get_billYears()
+	{
+		$query = $this->billdb->query("SELECT DISTINCT YEAR(billDueDate) as year FROM billdb.bills WHERE userID = '".$this->session->userdata("userID")."' ORDER BY YEAR(billDueDate) DESC");
+
+		return $query->result_array();
+	}
+	
+	/* Retrieves distinct months per year for logged in user
+	** @author Daryl Lim
+	** @Output: Array of months
+	*/	
+	public function get_Months($billYear)
+	{
+		$query = $this->billdb->query("SELECT DISTINCT MONTH(billDueDate) as month FROM billdb.bills WHERE userID = '".$this->session->userdata("userID")."'AND YEAR(billDueDate) = '".$billYear."' ORDER BY MONTH(billDueDate)");
+
+		return $query->result_array();
+	}
+	
+	/* Retrieves average/total billing amount/month/year for logged in user
+	** @author Daryl Lim
+	** @parameter: Billing year, total or average
+	** @Output: Array of SQL items
+	*/	
+	public function get_MthlyStats($billYear, $isAvg)
+	{
+		if ($isAvg == TRUE) // Average bill per month
+		{
+			$query = $this->billdb->query("SELECT MONTH(billDueDate) as month, AVG(totalAmt) as amt FROM billdb.bills WHERE userID = '".$this->session->userdata("userID")."' AND YEAR(billDueDate) = '".$billYear."' GROUP BY MONTH(billDueDate)");
+		}
+		else // Bill total amount per month
+		{
+			$query = $this->billdb->query("SELECT MONTH(billDueDate) as month, SUM(totalAmt) as amt FROM billdb.bills WHERE userID = '".$this->session->userdata("userID")."' AND YEAR(billDueDate) = '".$billYear."' GROUP BY MONTH(billDueDate)");
+		}
+		
+		return $query->result_array();
+	}
+	
+	/* Retrieves monthly breakdown/billing org for logged in user
+	** @author Daryl Lim
+	** @parameter: Billing year
+	** @Output: Array of SQL items
+	*/	
+	public function get_MthlyBills($billYear)
+	{
+		return $query->result_array();
+	}
 }
