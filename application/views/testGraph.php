@@ -1,6 +1,6 @@
 <!--
 /* View for getting and displaying bill data
-** @author Qiu Yunhan, modified by Daryl Lim
+** @author Qiu Yunhan, Daryl Lim
 ** @reviewer Daryl Lim
 */
 -->
@@ -27,11 +27,14 @@
 			<!-- Year Dropdown list -->
 			<div class = "col-xs-2 col-centered">
 				<select name="Select Year:" class = "form-control" id ="selectYear">
-					<?php				
+					<option> Select Year: </option>
+					<?php
+						
 						// Select current year, or latest year if non-existent
 						$selectedYear = $billYears[0]['year']; // Set to latest year in list
 						
 						$counter = 0;
+						
 						// Populate dropdown list with existing years
 						foreach ($billYears as $row) 
 						{
@@ -43,12 +46,6 @@
 							
 							// Populate all years
 							echo '<option ';
-
-							if ($row['year'] == $selectedYear)
-							{
-								echo 'selected ';
-							}
-							
 							echo 'value ="'.$counter.'">';
 							
 							if ($row['year'] == NULL)
@@ -71,6 +68,160 @@
 			<div id="container3" class="row"></div>
 		</div>
 	</div>
+	
+	<!--Pass PHP array to jQuery-->
+	<script>
+		$(function () 
+			{
+				// billMths[year][month], by year
+				var billMths = new Array();
+				var billAvg = new Array();
+				var billTotal = new Array();
+				var billBrkdown = new Array();
+				
+				var years = new Array();
+				var yearTotal = new Array();
+				var yearAvg = new Array();
+				
+				var maxYrs = <?php echo count($billYears).';'?>
+				
+				// Pass PHP months array to jQuery
+				<?php
+					
+					// Yearly statistics
+					$yrCnt = 0;
+					
+					foreach ($billYearsAT as $row) //iterate each year
+					{	
+						if ($row['year'] == NULL)
+						{
+							echo 'years['.$yrCnt.'] = "Unspecified";';
+						}
+						else
+						{
+							echo 'years['.$yrCnt.'] = "'.$row['year'].'";';
+						}
+						
+						echo 'yearTotal['.$yrCnt.'] = '.$row['totalAmt'].';';
+						echo 'yearAvg['.$yrCnt.'] = '.$row['avgAmt'].';';
+						
+						$yrCnt++;
+						
+					}
+					
+					// Monthly breakdown
+				
+					$yearCounter = 0;
+					
+					
+					foreach ($billMthBillOrg as $year) // iterate through each year
+					{
+						$rowCnt = 0;
+						echo 'tempArr = new Array();';
+						
+						foreach ($year as $row) // Iterate through each year's bills
+						{
+							echo 'tempArr['.$rowCnt.'] = new Array();';
+							echo 'tempArr['.$rowCnt.'] = [';
+							echo '"'.$row['billOrg'].'",';
+							echo '"'.$row['month'].'",';
+							echo $row['totalAmt'].'];';
+							
+							$rowCnt++;
+						}
+						// Populate javascript array
+						
+						echo 'billBrkdown['.$yearCounter.'] = tempArr;';
+						
+						$yearCounter++;
+					}
+					
+					// Monthly statistics
+					$yearCount = 0;
+							
+					foreach ($billMonths as $row) // iterate through each year
+					{	
+						// Populate months list
+						echo 'billMths['.$yearCount.'] = new Array();
+						billMths['.$yearCount.'] = [';
+						
+						$mthCount = 0;
+						$maxMthCount = count($row);
+						
+						// Populate year with months
+						foreach ($row as $mth)
+						{
+							echo $mth['month']; // From 0-12
+							
+							if ($mthCount != $maxMthCount)
+							{
+								echo ',';
+							}
+							
+							$mthCount++;
+						}
+								
+						echo '];';
+								
+						// Populate average
+						echo 'billAvg['.$yearCount.'] = new Array();
+						billAvg['.$yearCount.'] = [';
+						
+						$mthCount = 0;
+						$maxMthCount = count($row);
+						
+						// Populate year with months
+						foreach ($row as $mth)
+						{
+							echo $mth['avgAmt']; // From 0-12
+							
+							if ($mthCount != $maxMthCount)
+							{
+								echo ',';
+							}
+							
+							$mthCount++;
+						}
+						
+						echo '];';
+						
+						// Populate average
+						echo 'billTotal['.$yearCount.'] = new Array();
+						billTotal['.$yearCount.'] = [';
+								
+						$mthCount = 0;
+						$maxMthCount = count($row);
+						
+						// Populate year with months
+						foreach ($row as $mth)
+						{
+							echo $mth['totalAmt']; // From 0-12
+							
+							if ($mthCount != $maxMthCount)
+							{
+								echo ',';
+							}
+							
+							$mthCount++;
+						}
+						
+						echo '];';
+						
+						$yearCount++;
+					}
+				?>
+						
+				// Make global
+				window.billMths = billMths;
+				window.billAvg = billAvg;
+				window.billTotal = billTotal;
+				
+				window.years = years;
+				window.yearTotal = yearTotal;
+				window.yearAvg = yearAvg;
+				window.billBrkdown = billBrkdown;
+		});
+	</script>
 	
 	<!-- Script for billOrg Chart -->
 	<script>
@@ -182,9 +333,9 @@
 		$(function () 
 		{
 			var chart;
-			
 			$(document).ready(function() 
 			{
+				// Create chart
 				chart = new Highcharts.Chart(
 				{
 					chart: 
@@ -213,101 +364,182 @@
 						}
 					},
 					xAxis: {
-						categories: 
-						[
-						'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
-						]
+						categories: years
 					},
-					series: [
-					{
-						name: 'Data 1',
-						stacking: 'normal',
-						data: [29.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4]
-					}, 
-					{
-						name: 'Data 2',
-						stacking: 'normal',
-						data: [144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4, 29.9, 71.5, 106.4, 129.2]
-					}, 
-					{    
+					series: 
+					[{    
 						name: 'Average',
 						type : 'spline',
-						data: [35, 60, 77, 56.7, 34, 55, 66, 72, 90, 45, 56, 60],
+						data: yearTotal,
 						marker: 
 						{
 							lineWidth: 2,
 							lineColor: Highcharts.getOptions().colors[3],
 							fillColor: 'white'
-						}
+						},
+						zIndex: 1
+					},
+					{    
+						name: 'Total',
+						type : 'spline',
+						data: yearAvg,
+						marker: 
+						{
+							lineWidth: 2,
+							lineColor: Highcharts.getOptions().colors[4],
+							fillColor: 'white'
+						},
+						zIndex: 2
 					}]
 				});
 			});
 			
-			/*
 			$("#selectYear").on('change', function ()
 			{
-				// Pass PHP array to jQuery
-				var arrYearPHP = [
-				<?php 
-					$counter = 0;
-					$maxCount = count($billMonths);
-					
-					foreach ($billMonths as $row)
-					{
-						echo '"';
-						
-						switch ($billMonths['month'])
-						{
-							case 1:
-								echo "Jan";
-								break;
-							case 2:
-								echo "Feb";
-								break;
-							case 3:
-								echo "Mar";
-								break;	
-							case 4:
-								echo "Apr";
-								break;	
-							case 5:
-								echo "May";
-								break;	
-							case 6:
-								echo "Jun";
-								break;	
-							case 7:
-								echo "Jul";
-								break;	
-							case 8:
-								echo "Aug";
-								break;	
-							case 9:
-								echo "Sep";
-								break;	
-							case 10:
-								echo "Oct";
-								break;	
-							case 11:
-								echo "Nov";
-								break;	
-							case 12:
-								echo "Dec";
-								break;	
-							default:
-								echo "Unspecified";
-								break;
-						}
-						
-						echo '"';
-					}
-				?>
-				];
 				var selYear = $("#selectYear").val();
-				chart.xAxis[0].setCategories([]);
+				var yearMonths = new Array();		
+
+				// Change to names
+				for (i = 0; i < billMths[selYear].length; i++)
+				{	
+					console.log("Switched Month: " +billMths[selYear][i]);
+					switch(billMths[selYear][i])
+					{
+						case 1:
+							yearMonths[i] = "Jan";
+							break;
+						case 2:
+							yearMonths[i] = "Feb";
+							break;
+						case 3:
+							yearMonths[i] = "Mar";
+							break;	
+						case 4:
+							yearMonths[i] = "Apr";
+							break;	
+						case 5:
+							yearMonths[i] = "May";
+							break;	
+						case 6:
+							yearMonths[i] = "Jun";
+							break;	
+						case 7:
+							yearMonths[i] = "Jul";
+							break;	
+						case 8:
+							yearMonths[i] = "Aug";
+							break;	
+						case 9:
+							yearMonths[i] = "Sep";
+							break;	
+						case 10:
+							yearMonths[i] = "Oct";
+							break;	
+						case 11:
+							yearMonths[i] = "Nov";
+							break;	
+						case 12:
+							yearMonths[i] = "Dec";
+							break;	
+						default:
+							yearMonths[i] = "Unspecified";
+							break;
+					}
+				}
 				
-				chart.series[2].setData([32, 80, 37, 26.7, 14, 56, 76, 82, 10, 35, 46, 10]);
-			});*/
+				// Dynamically update chart according to selected year.
+				// Set title according to year
+				chart.setTitle(null, { text: 'By Month'}, false);
+				// Set average spline according to selected year.
+				chart.xAxis[0].setCategories(yearMonths, false);
+				chart.series[0].setData(billAvg[selYear], false);
+				chart.series[1].setData(billTotal[selYear], false);
+				
+				// Add stacked columns
+				var brkdown = billBrkdown[selYear];
+				
+				// Change month to index
+				for (i = 0; i < brkdown.length; i++)
+				{
+					for (j = 0; j < yearMonths.length; j++)
+					{
+						if (brkdown[i][1] == yearMonths[j])
+						{
+							brkdown[i][1] = j;
+						}
+					}
+				}
+				
+				var currOrg = brkdown[0][0];
+				var currMth = brkdown[0][1];
+				var currAmt = brkdown[0][2];
+				var currSeries = 2;
+				var currPt = 0;
+
+				// Clear existing series
+				var seriesLength = chart.series.length;
+				for(var i = seriesLength - 1; i > 1; i--) 
+				{
+					chart.series[i].remove();
+				}
+				
+				chart.addSeries(
+				{
+					name: brkdown[0][0],
+					stacking: 'normal'
+				});
+				
+				chart.series[currSeries].addPoint([currMth, currAmt], false); // Add first point
+				currPt++;
+				
+				for (i = 1; i < brkdown.length; i++)
+				{
+					if (brkdown[i][0] == currOrg) // billOrg match, may not match month
+					{
+						
+						if (brkdown[i][1] == currMth) // billOrg AND month match
+						{
+							currAmt = currAmt + brkdown[i][2]; // Sum totalAmt
+							
+							currPt--;
+							chart.series[currSeries].removePoint(currPt, false); // Remove previous point
+							
+							chart.series[currSeries].addPoint([currMth, currAmt], false); // Add summed point at x(month), y(amt)
+							currPt++;
+						}
+						else // Only billOrgs match, month does not match (New point)
+						{
+							console.log("billOrgs match, month doesn't match");
+							// Add new point
+							currMth = brkdown[i][1];
+							currAmt = brkdown[i][2];
+							chart.series[currSeries].addPoint([currMth, currAmt], false);
+							currPt++;
+						}
+					}
+					else //billOrgs do NOT match
+					{
+						console.log("billOrgs do not match");
+						// Start new series
+						currPt = 0;
+						currSeries++; 
+						currOrg = brkdown[i][0];
+						currMth = brkdown [i][1];
+						currAmt = brkdown [i][2];
+						
+						chart.addSeries(
+						{
+							name: currOrg,
+							stacking: 'normal'
+						});
+						
+						chart.series[currSeries].addPoint([currMth, currAmt], false);
+						currPt++;
+					}
+				}
+				
+				chart.redraw();
+			});
 		});
 	</script>         
 		

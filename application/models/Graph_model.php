@@ -1,7 +1,7 @@
 <?php
 
 /* Model for getting and displaying bill data
-** @author Qiu Yunhan
+** @author Qiu Yunhan, Daryl Lim
 ** @reviewer Daryl Lim
 */
 
@@ -68,43 +68,36 @@ class Graph_model extends CI_Model
 		return $query->result_array();
 	}
 	
-	/* Retrieves distinct months per year for logged in user
+	/* Retrieves distinct months' average and total per year for logged in user
 	** @author Daryl Lim
 	** @Output: Array of months
 	*/	
 	public function get_Months($billYear)
 	{
-		$query = $this->billdb->query("SELECT DISTINCT MONTH(billDueDate) as month FROM billdb.bills WHERE userID = '".$this->session->userdata("userID")."'AND YEAR(billDueDate) = '".$billYear."' ORDER BY MONTH(billDueDate)");
+		$query = $this->billdb->query("SELECT DISTINCT MONTH(billDueDate) as month, AVG(totalAmt) as avgAmt, SUM(totalAmt) as totalAmt FROM billdb.bills WHERE userID = '".$this->session->userdata("userID")."'AND YEAR(billDueDate) = '".$billYear."' GROUP BY MONTH(billDueDate) ORDER BY MONTH(billDueDate)");
 
 		return $query->result_array();
 	}
 	
-	/* Retrieves average/total billing amount/month/year for logged in user
+	/* Retrieves monthly billorg breakdown per year for logged in user
 	** @author Daryl Lim
-	** @parameter: Billing year, total or average
-	** @Output: Array of SQL items
+	** @Output: Array of months, billorg, totalAmt
 	*/	
-	public function get_MthlyStats($billYear, $isAvg)
+	public function get_MthlyBillOrg($billYear)
 	{
-		if ($isAvg == TRUE) // Average bill per month
-		{
-			$query = $this->billdb->query("SELECT MONTH(billDueDate) as month, AVG(totalAmt) as amt FROM billdb.bills WHERE userID = '".$this->session->userdata("userID")."' AND YEAR(billDueDate) = '".$billYear."' GROUP BY MONTH(billDueDate)");
-		}
-		else // Bill total amount per month
-		{
-			$query = $this->billdb->query("SELECT MONTH(billDueDate) as month, SUM(totalAmt) as amt FROM billdb.bills WHERE userID = '".$this->session->userdata("userID")."' AND YEAR(billDueDate) = '".$billYear."' GROUP BY MONTH(billDueDate)");
-		}
-		
+		$query = $this->billdb->query("SELECT DATE_FORMAT(billDueDate, '%b') AS month, billOrg, totalAmt FROM billdb.bills WHERE userID = '".$this->session->userdata("userID")."' AND YEAR(billDueDate) = '".$billYear."' ORDER BY billOrg, MONTH(billDueDate)");
+
 		return $query->result_array();
 	}
 	
-	/* Retrieves monthly breakdown/billing org for logged in user
+	/* Retrieves average/total by year for logged in user
 	** @author Daryl Lim
-	** @parameter: Billing year
-	** @Output: Array of SQL items
+	** @Output: Array of years
 	*/	
-	public function get_MthlyBills($billYear)
+	public function get_Years()
 	{
+		$query = $this->billdb->query("SELECT YEAR(billDueDate) as year, AVG(totalAmt) as avgAmt, SUM(totalAmt) as totalAmt FROM billdb.bills WHERE userID = '".$this->session->userdata("userID")."' GROUP BY YEAR(billDueDate) ORDER BY YEAR(billDueDate)");
+
 		return $query->result_array();
 	}
 }

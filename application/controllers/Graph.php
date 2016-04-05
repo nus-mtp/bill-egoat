@@ -1,6 +1,6 @@
 <?php
 /* Controller for getting and displaying bill data
-** @author Qiu Yunhan
+** @author Qiu Yunhan, Daryl Lim
 ** @reviewer Daryl Lim
 */
 class Graph extends CI_Controller
@@ -42,33 +42,29 @@ class Graph extends CI_Controller
 		
 		// Retrieve months per year of bills
 		$billMonths = array();
+		$billMthBillOrg = array();
+		
+		// Retrieve years overall
+		$billYearsAT = $this->Graph_model->get_Years();
 		
 		foreach ( $data['billYears'] as $row)
 		{
 			array_push($billMonths, $this->Graph_model->get_Months($row['year']));
+			array_push($billMthBillOrg, $this->Graph_model->get_MthlyBillOrg($row['year']));
 		}
 		
-		// Retrieve total and monthly amounts per year
-		$billYearTotal = array();
-		$billYearAvg = array();
-
-		foreach ( $data['billYears'] as $row)
-		{
-			array_push($billYearTotal, $this->Graph_model->get_MthlyStats($row['year'],FALSE));
-			array_push($billYearAvg, $this->Graph_model->get_MthlyStats($row['year'],TRUE)); 
-		}
-
+		$data['billMthBillOrg'] = $billMthBillOrg;
+		$data['billYearsAT'] = $billYearsAT;
 		$data['billMonths'] = $billMonths;
-		
-		$data['billYearTotal'] = $billYearTotal;
-		$data['billYearAvg'] = $billYearAvg;
 		
 		$data['billOrgMths'] = $billOrgByMths;
 		$data['title'] = "Bill Overview";
 		$data['headline'] = "";
 		$data['include'] = 'testGraph';
-		$data['billOrgsJSON'] = json_encode($data['billOrgs']);
-		$data['billOrgMthsJSON'] = json_encode($data['billOrgMths']);
+		
+		//$data['billMonthsJSON'] = json_encode($data['billMonths']);
+		//$data['billOrgsJSON'] = json_encode($data['billOrgs']);
+		//$data['billOrgMthsJSON'] = json_encode($data['billOrgMths']);
         
 		$this->load->vars($data);
 		$this->load->view('template');
