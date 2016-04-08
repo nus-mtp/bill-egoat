@@ -126,9 +126,8 @@
 					<ul class="nav navbar-nav navbar" id="navbar-2-links">
 						<li><a href="https://www.billegoat.gq/index.php/Home">Dashboard</a></li>
 						<li><a href="https://www.billegoat.gq/index.php/Graph">Bill Overview</a></li>
-						<li><a href="#">Unpaid Bills</a></li>
-						<li><a href="#">Recent Bills</a></li>
-						<li><a href="#">Templates</a></li>
+						<li><a href="<?php echo site_url('Graph/index/1'); ?>">Unpaid Bills</a></li>
+						<li><a href="<?php echo site_url('Graph/index/2'); ?>">Recent Bills</a></li>
 					</ul>
 				</div>
 			</div>

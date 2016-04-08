@@ -7,17 +7,17 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
-		<script src="../js/jquery-2.2.0.min.js"></script> 
-		<script src="../js/jquery.tablesorter.js"></script> 
-		<script src="../js/highcharts.js"></script>
-		<script src="../js/drilldown.js"></script>
-		<script src="../js/exporting.js"></script>
+		<script src="https://www.billegoat.gq/js/jquery-2.2.0.min.js"></script> 
+		<script src="https://www.billegoat.gq/js/jquery.tablesorter.js"></script> 
+		<script src="https://www.billegoat.gq/js/highcharts.js"></script>
+		<script src="https://www.billegoat.gq/js/drilldown.js"></script>
+		<script src="https://www.billegoat.gq/js/exporting.js"></script>
 	</head>
 
 	<body>
 
 	<div class = "container center-block text-center">
-		<h1>Bill Overview</h1>
+		<h1><?php echo $title; ?></h1>
 	</div>
 	
 	<!-- Containers for Charts -->
@@ -232,7 +232,7 @@
 			{
 				chart: 
 				{
-					type: 'pie'
+					type: 'pie',
 				},
 				title: 
 				{
@@ -341,7 +341,10 @@
 					chart: 
 					{
 						renderTo: 'container3',
-						type: 'column'
+						type: 'column',
+                        zoomType: 'x',
+                        panning: true,
+                        panKey: 'shift'
 					},
 					title: 
 					{
@@ -542,50 +545,48 @@
 			});
 		});
 	</script>         
-		
-	<!-- TABLE-->     
+	
+	<div class = "row" id ="padrow">
+		<div id="container4" class="col-md-12">
+			<!-- TABLE-->     
 
-	<table id="myTable" class="tablesorter table-responsive"> 
-		<thead> 
-		<tr> 
-			<th>Bill Complete?</th>
-			<th>Bill ID</th> 
-			<th>Billing Organisation</th>
-			<th>Amount Payable</th>
-			<th>Sent Date</th> 
-			<th>Due Date</th>  
-			<th>Modified Date</th> 
-			<th>Submitted Date</th> 
-			<th>View Bill</th> 
-			<th>Update Bill</th> 
-			<th>Template</th> 
-			
-		</tr> 
-		</thead>
-		
-		<tbody> 
-			
-			<?php foreach ($bills as $bills_id): ?>
-			
-			<tr>
-			<td><?php echo $bills_id['billIsComplete']; ?></td>
-			<td><?php echo $bills_id['billID']; ?></td>
-			<td><?php echo $bills_id['billOrg']; ?></td>
-			<td><?php echo $bills_id['totalAmt']; ?></td>
-			<td><?php echo $bills_id['billSentDate']; ?></td>
-			<td><?php echo $bills_id['billDueDate']; ?></td>
-			<td><?php echo $bills_id['billModifiedTimeStamp']; ?></td>
-			<td><?php echo $bills_id['submittedTimeStamp']; ?></td>
-			<td><a href="<?php echo site_url('Graph/viewBill/'.$bills_id['billID']); ?>">View Bill</a></td>
-			<td><a href="<?php echo site_url('Graph/updateBill/'.$bills_id['billID']); ?>">Update Bill</a></td>
-			<td><a href="<?php echo site_url('Templates/addTemplateFromBill/'.$bills_id['billID']); ?>">Use Bill to create Template</a></td>
-			</tr>
-			
-			<?php endforeach; ?>     
-		</tbody> 
-	</table> 
-
-
+			<table id="myTable" class="tablesorter table-responsive"> 
+				<thead> 
+				<tr> 
+					<th>Billing Organisation</th>
+					<th>Amount Payable</th>
+					<th>Sent Date</th> 
+					<th>Due Date</th>  
+					<th>Modified Date</th> 
+					<th>Submitted Date</th> 
+					<th>View Bill</th> 
+					<th>Update Bill</th> 
+					<th>Template</th> 
+					
+				</tr> 
+				</thead>
+				
+				<tbody> 
+					
+					<?php foreach ($bills as $bills_id): ?>
+					
+					<tr>
+					<td><?php echo $bills_id['billOrg']; ?></td>
+					<td><?php echo $bills_id['totalAmt']; ?></td>
+					<td><?php echo $bills_id['billSentDate']; ?></td>
+					<td><?php echo $bills_id['billDueDate']; ?></td>
+					<td><?php echo $bills_id['billModifiedTimeStamp']; ?></td>
+					<td><?php echo $bills_id['submittedTimeStamp']; ?></td>
+					<td><a href="<?php echo site_url('Graph/viewBill/'.$bills_id['billID']); ?>">View Bill</a></td>
+					<td><a href="<?php echo site_url('Graph/updateBill/'.$bills_id['billID']); ?>">Update Bill</a></td>
+					<td><a href="<?php echo site_url('Templates/addTemplateFromBill/'.$bills_id['billID']); ?>">Use Bill to create Template</a></td>
+					</tr>
+					
+					<?php endforeach; ?>     
+				</tbody> 
+			</table>
+		</div>
+	</div>
 	</body>
 </html>
 

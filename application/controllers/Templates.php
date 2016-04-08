@@ -9,7 +9,6 @@ public function __construct()
     $this->load->model('Graph_model');
     $this->load->model('Templates_model');
 }
-
  public function index()
  {
       $data['title'] = "Create Bill Template";
@@ -21,21 +20,19 @@ public function __construct()
     
  public function addTemplateFromBill($billID = NULL)
  {
-    $data['bills_id'] = $this->Graph_model->get_graphdata($billID);
+    $data['bills_id'] = $this->Graph_model->get_graphdata($billID, 0);
         
         
         if (empty($data['bills_id']))
         {
             show_404();
         }
-
          $data['title'] = $data['bills_id']['billID'];
      
     $data['headline'] = "Create Template from Bill ".$data['bills_id']['billID'];
     $data['include'] = 'createTemplate_billorg';
     $this->load->vars($data);
     $this->load->view('template');
-
      
  }
      
@@ -49,7 +46,7 @@ public function __construct()
      $data['templateCoords'] = $_POST['submissionArray'];
     }
     
-    $data['bill_data'] = $this->Graph_model->get_graphdata($billID);
+    $data['bill_data'] = $this->Graph_model->get_graphdata($billID, 0);
     $data['billFilePath'] = $data['bill_data']['billFilePath'];
     $data['title'] = "Create Template from Bill ".$data['bill_data']['billID'];
     $data['headline'] = "Create Template from Bill ".$data['bill_data']['billID'];
@@ -64,12 +61,16 @@ public function saveTemplateCoords()
     $this->load->model('Templates_model','',TRUE);
     
     if (isset($_POST['submissionArray'])){
-     $data['templateCoords'] = $_POST['submissionArray'];
-        $this->Templates_model->insert_datafields_table($_POST['submissionArray']);
+        $data['templateCoords'] = $_GET['submissionArray'];
+        $this->Templates_model->insert_datafields_table($_GET['submissionArray']);
+        echo implode(" ", $data['templateCoords'][0])."/n".implode(" ", $data['templateCoords'][1])."/n".implode(" ", $data['templateCoords'][2]);
+        echo "Coordinates saved.";  
     }
-    
+    else {
+        echo "Coordinates failed to save.";
+    }
    //echo implode(" ", $data['templateCoords'][0])."/n".implode(" ", $data['templateCoords'][1])."/n".implode(" ", $data['templateCoords'][2]);
-    echo "Coordinates saved.";
+    
     
 }
     
@@ -79,7 +80,5 @@ public function updateBill()
     $this->Maddbill_model->update_bills_table($this->input->post('billID'));
     redirect('graph','refresh');
 }
-
 }
-
 ?>
