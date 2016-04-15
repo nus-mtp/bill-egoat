@@ -18,6 +18,7 @@
 
 	<div class = "container center-block text-center">
 		<h1><?php echo $title; ?></h1>
+		<br/>
 	</div>
 	
 	<!-- Containers for Charts -->
@@ -553,15 +554,14 @@
 			<table id="myTable" class="tablesorter table-responsive"> 
 				<thead> 
 				<tr> 
-					<th>Billing Organisation</th>
-					<th>Amount Payable</th>
+					<th>ID</th>
+					<th>Bill Org.</th>
+					<th>Amt Due</th>
 					<th>Sent Date</th> 
 					<th>Due Date</th>  
-					<th>Modified Date</th> 
-					<th>Submitted Date</th> 
-					<th>View Bill</th> 
-					<th>Update Bill</th> 
-					<th>Template</th> 
+					<th>Modified On</th> 
+					<th>Submitted On</th> 
+					<th>Bill Controls</th>
 					
 				</tr> 
 				</thead>
@@ -570,17 +570,19 @@
 					
 					<?php foreach ($bills as $bills_id): ?>
 					
-					<tr>
-					<td><?php echo $bills_id['billOrg']; ?></td>
-					<td><?php echo $bills_id['totalAmt']; ?></td>
+					<td><?php echo $bills_id['billID']; ?></td>
+					<td id = "left"><?php echo $bills_id['billOrg']; ?></td>
+					<td  id = "left"><?php echo $bills_id['totalAmt']; ?></td>
 					<td><?php echo $bills_id['billSentDate']; ?></td>
 					<td><?php echo $bills_id['billDueDate']; ?></td>
 					<td><?php echo $bills_id['billModifiedTimeStamp']; ?></td>
 					<td><?php echo $bills_id['submittedTimeStamp']; ?></td>
-					<td><a href="<?php echo site_url('Graph/viewBill/'.$bills_id['billID']); ?>">View Bill</a></td>
-					<td><a href="<?php echo site_url('Graph/updateBill/'.$bills_id['billID']); ?>">Update Bill</a></td>
-					<td><a href="<?php echo site_url('Templates/addTemplateFromBill/'.$bills_id['billID']); ?>">Use Bill to create Template</a></td>
-					</tr>
+					<td>
+						<a href="<?php echo site_url('Graph/viewBill/'.$bills_id['billID']); ?>">View Bill</a> | 
+						<a href="<?php echo site_url('Graph/updateBill/'.$bills_id['billID']); ?>">Update Bill</a> | 
+						<a href="<?php echo site_url('Templates/addTemplateFromBill/'.$bills_id['billID']); ?>">Create Template</a>
+					</td>
+				</tr>
 					
 					<?php endforeach; ?>     
 				</tbody> 

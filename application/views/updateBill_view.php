@@ -82,7 +82,7 @@
 				?>">
 				<br/>
 		
-				<label for="isCompleted">Mark as completed?</label>
+				<label for="billFilePath">Mark as completed?</label>
 				<input type="checkbox" id="isComplete" name="isComplete"
 				<?php 
 					if ($bills_id['billIsComplete'] == TRUE)

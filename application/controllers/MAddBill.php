@@ -81,7 +81,7 @@ class MAddBill extends CI_Controller {
 			$billID = $this->Maddbill_model->insert_bills($imgName);
 			
 			// Retrieve bill info
-			$data['bills_id'] = $this->Graph_model->get_graphdata($billID);
+			$data['bills_id'] = $this->Graph_model->get_graphdata($billID, 0);
 			$data['tags'] = $this->Maddbill_model->get_tags($billID);
 			
 			// Redirect to verification/update bill
@@ -98,7 +98,7 @@ class MAddBill extends CI_Controller {
 	*/
 	public function updateBill()
 	{
-		$data['bills_id'] = $this->Graph_model->get_graphdata($this->input->post('billID'));
+		$data['bills_id'] = $this->Graph_model->get_graphdata($this->input->post('billID'),0);
 		
 		// Form Validation
 		$this->load->library('form_validation');

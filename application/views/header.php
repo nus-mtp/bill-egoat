@@ -65,14 +65,14 @@
 				<!-- Main Navbar-->
 				<div class="collapse navbar-collapse" id="navbar-collapse-1">
 					<div class="col-sm-4 col-md-4">
-						<form class="input-form" role="search" id="searchbar">
-							<div class="input-group">
-								<input type="text" class="form-control" placeholder="Search for bills">
+						<?php echo form_open('Search/searchBill');?>
+							<div class="input-group" id = "searchbar">
+								<input type="text" class="form-control" placeholder="Search for bills" id="searchInput" name = "searchInput">
 								<div class="input-group-btn">
 									<button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i></button>
 								</div>
 							</div>
-						</form>
+						<?php echo form_close();?>
 					</div>
 				
 					<ul class="nav navbar-nav">

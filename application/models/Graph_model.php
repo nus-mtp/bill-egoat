@@ -35,7 +35,7 @@ class Graph_model extends CI_Model
 				// Unpaid Bills
 				$query = $this->billdb->query("SELECT * FROM billdb.bills WHERE userID ='".$this->session->userdata("userID")."'AND billIsComplete = 'FALSE'");
 			}
-			else
+			else if ($select == 2)
 			{
 				// Recent bills only
 				$query = $this->billdb->query("SELECT * FROM billdb.bills WHERE userID ='".$this->session->userdata("userID")."'AND YEAR(billDueDate) = '".date("Y")."'");

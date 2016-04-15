@@ -163,6 +163,14 @@ p, div {
 	height: 520px;
 }
 
+#container4{
+	border-top: 2px solid #16ccd6;
+	border-left: 2px solid #16ccd6;
+	border-bottom: 2px solid #16ccd6;
+	border-right: 2px solid #16ccd6;
+	border-radius: 15px;
+}
+
 #padrow{
 	margin-left:5px;
 	margin-right:0px;
@@ -173,4 +181,12 @@ p, div {
 .col-centered{
     float: none;
     margin: 20px auto;
+}
+
+th, td {
+    text-align: center;
+}
+
+#left{
+	text-align: left;
 }
