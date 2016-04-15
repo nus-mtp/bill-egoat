@@ -1,8 +1,9 @@
-/**This schema builds the database structure for Bill.eGoat, 
+/*This schema builds the database structure for Bill.eGoat, 
   *and contains user, template and bill data in a normalised form.
+  * @author Daryl Lim
 */
 
-/**
+/*
   *@desc Initialisation, this section recreates the DB
 */
 DROP DATABASE IF EXISTS billDB;
@@ -13,7 +14,7 @@ CREATE DATABASE userDB;
 
 USE userDB;
 
-/**
+/*
   *@desc Username/password table, minimum requirements
   *for authentication/identification of an account
 */
@@ -22,6 +23,8 @@ CREATE TABLE userDB.users
 	userID INTEGER AUTO_INCREMENT NOT NULL,
     passwd VARCHAR(41) NOT NULL,
 	userEmail VARCHAR(255) NOT NULL,
+	
+	-- Fields used but feature unimplemented
     isPartnerOrg BOOLEAN,
     failedLoginNo TINYINT,
     isActivated BOOLEAN NOT NULL,
@@ -31,72 +34,11 @@ CREATE TABLE userDB.users
     PRIMARY KEY (userID)
 );
 
-/**
-  *@desc User profile and preferences, including reminders
-  *,preferred currency and actual name
-*/
-CREATE TABLE userDB.userPrefs
-(
-	userID INTEGER NOT NULL,
-    realName VARCHAR(100) NOT NULL,
-    isRemindInstant BOOLEAN,
-    remindDaily TIME,
-    remindWeeklyOnDay TINYINT,
-    remindMonthlyOnDay TINYINT,
-    defaultCurrency CHAR(3),
-    
-    PRIMARY KEY (userID)
-);
-
-/**
-  *@desc Contains all user emails, including reminder
-  *and recovery emails
-*/
-CREATE TABLE userDB.emails
-(
-	userID INTEGER NOT NULL,
-    userEmail VARCHAR(255) NOT NULL,
-    isReminderEmail BOOLEAN NOT NULL,
-    isRecoveryEmail BOOLEAN NOT NULL,
-    
-    PRIMARY KEY (userID, userEmail)
- 
-);
-
-/**
-  *@desc Contains financial account information, users can
-  *indicate which account paid for which expense.
-*/
-CREATE TABLE userDB.financeAccts
-(
-	userID INTEGER NOT NULL,
-    acctNo INTEGER,
-    acctName VARCHAR (100),
-    acctOrg VARCHAR (100),
-    acctBalance DECIMAL(19,4),
-    
-    PRIMARY KEY (userID, acctNo)
-);
-
-/**
-  *@desc Friends list for auto-complete when trying to share
-  *bills
-*/
-CREATE TABLE userDB.friends
-(
-	userID INTEGER NOT NULL,
-    friendID INTEGER NOT NULL,
-    
-    PRIMARY KEY (userID, friendID)
-
-);
-
-
 CREATE DATABASE templateDB;
 
 USE templateDB;
 
-/**
+/*
   *@desc Contains minimum data to identify a template
 */
 CREATE TABLE templateDB.templates
@@ -105,22 +47,24 @@ CREATE TABLE templateDB.templates
     billOrg VARCHAR (100),
     creatorID INTEGER,
     fileImgPath VARCHAR (255),
-    dateCreated DATETIME NOT NULL,
+    dateCreated DATETIME,
     dateModified TIMESTAMP,
     
     PRIMARY KEY (templateID)
 );
 
 
-/**
+/*
   *@desc Holds data for fields in template maps
 */
 CREATE TABLE templateDB.dataFields
 (
 	templateID INTEGER,
     dataFieldLabel VARCHAR (100),
-    coordinateLabelX VARCHAR (50),
-    coordinateLabelY VARCHAR (50),
+    coordinateLabelX FLOAT,
+    coordinateLabelY FLOAT,
+	coordinateLabelX2 FLOAT,
+    coordinateLabelY2 FLOAT,
     
     PRIMARY KEY (templateID,dataFieldLabel)
 );
@@ -129,7 +73,7 @@ CREATE DATABASE billDB;
 
 USE billDB;
 
-/**
+/*
   *@desc Contains minimum data to identify a particular bill
 */
 CREATE TABLE billDB.bills
@@ -152,23 +96,52 @@ CREATE TABLE billDB.bills
     PRIMARY KEY (billID)
 );
 
-/**
-  *@desc Bill permissions linked to user names.
-  *@params permissionType: 1)Owner 2)Editor 3)View
+/*
+  *@desc Holds all tags associated with a certain bill
 */
-CREATE TABLE billDB.sharing
+CREATE TABLE billDB.billTags
 (
-	billID INTEGER NOT NULL,
-    userID INTEGER NOT NULL,
-    permissionType TINYINT NOT NULL,
+	billID INTEGER,
+    tagName VARCHAR(50),
     
-    PRIMARY KEY (billID,userID)
+    PRIMARY KEY (billID,tagName)
+);
+
+-- Unused tables, pending implementation of new features in further work
+
+/*
+
+/**
+  *@desc Contains all user emails, including reminder
+  *and recovery emails
+
+CREATE TABLE userDB.emails
+(
+	userID INTEGER NOT NULL,
+    userEmail VARCHAR(255) NOT NULL,
+    isReminderEmail BOOLEAN NOT NULL,
+    isRecoveryEmail BOOLEAN NOT NULL,
+    
+    PRIMARY KEY (userID, userEmail)
+);
+
+/**
+  *@desc Friends list for auto-complete when trying to share
+  *bills
+
+CREATE TABLE userDB.friends
+(
+	userID INTEGER NOT NULL,
+    friendID INTEGER NOT NULL,
+    
+    PRIMARY KEY (userID, friendID)
+
 );
 
 /**
   *@desc Holds all possible fields pertaining to monetary
   *values within a bill.
-*/
+
 CREATE TABLE billDB.billAmts
 (
 	billID INTEGER NOT NULL,
@@ -180,8 +153,53 @@ CREATE TABLE billDB.billAmts
 );
 
 /**
+  *@desc Contains financial account information, users can
+  *indicate which account paid for which expense.
+
+CREATE TABLE userDB.financeAccts
+(
+	userID INTEGER NOT NULL,
+    acctNo INTEGER,
+    acctName VARCHAR (100),
+    acctOrg VARCHAR (100),
+    acctBalance DECIMAL(19,4),
+    
+    PRIMARY KEY (userID, acctNo)
+);
+
+/**
+  *@desc User profile and preferences, including reminders
+  *,preferred currency and actual name
+
+CREATE TABLE userDB.userPrefs
+(
+	userID INTEGER NOT NULL,
+    realName VARCHAR(100) NOT NULL,
+    isRemindInstant BOOLEAN,
+    remindDaily TIME,
+    remindWeeklyOnDay TINYINT,
+    remindMonthlyOnDay TINYINT,
+    defaultCurrency CHAR(3),
+    
+    PRIMARY KEY (userID)
+);
+
+/**
+  *@desc Bill permissions linked to user names.
+  *@params permissionType: 1)Owner 2)Editor 3)View
+*
+CREATE TABLE billDB.sharing
+(
+	billID INTEGER NOT NULL,
+    userID INTEGER NOT NULL,
+    permissionType TINYINT NOT NULL,
+    
+    PRIMARY KEY (billID,userID)
+);
+
+/**
   *@desc Holds commonly used tags for auto-completion
-*/
+*
 CREATE TABLE billDB.commonTags
 (
 	tagID INTEGER AUTO_INCREMENT NOT NULL,
@@ -191,21 +209,9 @@ CREATE TABLE billDB.commonTags
 );
 
 /**
-  *@desc Holds all tags associated with a certain bill
-*/
-CREATE TABLE billDB.billTags
-(
-	billID INTEGER,
-    tagName VARCHAR(50),
-    
-    PRIMARY KEY (billID,tagName)
-
-);
-
-/**
   *@desc Holds all flags associated with a certain bill, including
   *thresholds and triggers for reminders to be sent.
-*/
+*
 CREATE TABLE billDB.billFlags
 (
 	billID INTEGER,
@@ -223,3 +229,4 @@ CREATE TABLE billDB.billFlags
     
     PRIMARY KEY (billID,flagName)
 );
+*/
