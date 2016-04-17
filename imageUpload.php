@@ -10,31 +10,41 @@ Authored by Tan Tack Poh
 -->
 
 <?php
+
+   // Define global variable.
+   $max_file_size = 2097152;
+   $img_upload_directory = "images/";
+   $supported_img_file_format = array("jpeg","jpg","png");
+
+   // Define image file attributes variable
    if(isset($_FILES['image'])){
       $errors= array();
       $file_name = $_FILES['image']['name'];
       $file_size = $_FILES['image']['size'];
       $file_tmp = $_FILES['image']['tmp_name'];
       $file_type = $_FILES['image']['type'];
-      $file_ext=strtolower(end(explode('.',$_FILES['image']['name'])));
+      $file_ext = strtolower(end(explode('.',$_FILES['image']['name'])));
       
+      // Define supported image file formats
+      $expansions = $supported_img_file_format;
       
-      $expensions= array("jpeg","jpg","png");
-      
-      if(in_array($file_ext,$expensions)=== false){
-         $errors[]="extension not allowed, please choose a JPEG or PNG file.";
+      // Show error if unsupported file format is uploaded
+      if(in_array($file_ext,$expansions)=== false){
+         $errors[] = "extension not allowed, please choose a JPEG or PNG file.";
       }
       
-      if($file_size > 2097152) {
-         $errors[]='File size must be excately 2 MB';
+      // Show error if file is oversized
+      if($file_size > $max_file_size) {
+         $errors[] = 'File size must be less than 2 MB.';
       }
       
+
       if(empty($errors)==true) {
-         move_uploaded_file($file_tmp, "images/".$file_name);
-         echo "Stored in: " . "images/" . $file_name;
+         move_uploaded_file($file_tmp, $img_upload_directory . $file_name);
+         echo "Stored in: " . $img_upload_directory . $file_name;
          
-         $image=$file_name; /* Displaying Image*/
-         $img="images/".$image;
+         $image = $file_name; /* Displaying Image*/
+         $img = $img_upload_directory . $image;
          echo'<img src="'.$img.'">';
       
       }else{
