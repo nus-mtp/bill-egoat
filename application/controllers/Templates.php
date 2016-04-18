@@ -40,14 +40,15 @@ public function __construct()
  {
     // Load the model
     $this->load->model('Templates_model','',TRUE);
-	$data['templateID'] = $this->Templates_model->insert_templates_table();
+	$this->Templates_model->insert_templates_table();
      
-    if (isset($_POST['submissionArray'])){
-     $data['templateCoords'] = $_POST['submissionArray'];
+    if (isset($_GET['submissionArray'])){
+     $data['templateCoords'] = $_GET['submissionArray'];
     }
     
     $data['bill_data'] = $this->Graph_model->get_graphdata($billID, 0);
     $data['billFilePath'] = $data['bill_data']['billFilePath'];
+    $data['templateID'] = $this->Templates_model->get_template_ID($data['bill_data']['billOrg']);
     $data['title'] = "Create Template from Bill ".$data['bill_data']['billID'];
     $data['headline'] = "Create Template from Bill ".$data['bill_data']['billID'];
 	$data['include'] = 'drawtemplate';
@@ -60,9 +61,9 @@ public function saveTemplateCoords()
     // Load the model
     $this->load->model('Templates_model','',TRUE);
     
-    if (isset($_POST['submissionArray'])){
+    if (isset($_GET['submissionArray'])&&isset($_GET['templateID'])){
         $data['templateCoords'] = $_GET['submissionArray'];
-        $this->Templates_model->insert_datafields_table($_GET['submissionArray']);
+        $this->Templates_model->insert_datafields_table($_GET['submissionArray'],$_GET['templateID']);
         echo implode(" ", $data['templateCoords'][0])."/n".implode(" ", $data['templateCoords'][1])."/n".implode(" ", $data['templateCoords'][2]);
         echo "Coordinates saved.";  
     }
@@ -71,6 +72,19 @@ public function saveTemplateCoords()
     }
    //echo implode(" ", $data['templateCoords'][0])."/n".implode(" ", $data['templateCoords'][1])."/n".implode(" ", $data['templateCoords'][2]);
     
+    
+}
+    
+public function logoMatching()
+{
+    
+    // Load the model
+    $this->load->model('Templates_model','',TRUE);
+    
+    $data['headline'] = "Logo Matching";
+    $data['include'] = 'logomatching';
+    $this->load->vars($data);
+    $this->load->view('template');
     
 }
     

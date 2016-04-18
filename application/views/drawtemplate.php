@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <title>TEMPLATE CREATION</title>
-    <!--Template creation written by James-->
+
     <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
     <style type="text/css" media="screen">
         canvas {
@@ -21,10 +21,13 @@
         <button id="submitLogo">Submit as Logo</button>
         <button id="submitDate">Submit as Due Date</button>
         <button id="submitAmount">Submit as Amount Due</button>
-        <button id="saveCoords">Save locations for the template</button>
+        <button id="saveCoords">Save Template Coords</button>
     
     </p>
     <div id="canvas">
+    </div>
+    
+    <div id="templateIDPassing" style="display: none;"><?php $output = $templateID; printf($output); ?>
     </div>
     
     <script src="https://www.billegoat.gq/templateUI/script.js"></script>

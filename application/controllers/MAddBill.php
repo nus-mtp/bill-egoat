@@ -99,6 +99,7 @@ class MAddBill extends CI_Controller {
 	public function updateBill()
 	{
 		$data['bills_id'] = $this->Graph_model->get_graphdata($this->input->post('billID'),0);
+		$data['tags'] = $this->Maddbill_model->get_tags($this->input->post('billID'),0);
 		
 		// Form Validation
 		$this->load->library('form_validation');
@@ -141,6 +142,8 @@ class MAddBill extends CI_Controller {
 			$data['title'] = "View Bill ".$data['bills_id']['billID'];
 			$data['headline'] = "";
 			$data['include'] = 'viewBill_view';
+			$data['bills_id'] = $this->Graph_model->get_graphdata($this->input->post('billID'),0);
+			$data['tags'] = $this->Maddbill_model->get_tags($this->input->post('billID'),0);
 			$this->load->vars($data);
 			$this->load->view('template');
 		}
