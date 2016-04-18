@@ -348,12 +348,15 @@ class Maddbill_model extends CI_Model
 	}
 
 	/* Helper callback function to validate an uploaded file's size
-	** @author Tan Tack Poh, modified by Daryl Lim
+	** @author and refactored by Tan Tack Poh, modified by Daryl Lim
 	*/
 	private function upload_chk_size($file_size)
 	{
+
+        $maximum_allowed_file_size = 5242880;
+
 		// Enforce maximum file size
-		if($file_size > 5242880) 
+		if($file_size > $maximum_allowed_file_size) 
 		{
 			return FALSE;
 		}

@@ -38,7 +38,7 @@ class AddBill extends CI_Controller {
 	 }
 	 
 	/* Function to add and automatically process bills, called by form
-	** @author Daryl Lim and James Ho
+	** @author Daryl Lim, James Ho and (for logo recognition) Tan Tack Poh
 	*/
 	public function addBill()
 	{	
@@ -85,6 +85,8 @@ class AddBill extends CI_Controller {
             // Retrieve template info
             $templateID = $this->Templates_model->get_template_id($this->input->post('billOrg'));
             
+            // 
+
             // Take billID and templateID, pass into and run ocr function in background
             $data['filename'] = $this->Templates_model->ocr($billID,$templateID);
             

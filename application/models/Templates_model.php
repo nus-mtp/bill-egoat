@@ -52,8 +52,8 @@ class Templates_model extends CI_Model {
       */   
     public function ocr($id, $template)        
     {
-        $amountImgFileDirectory = "images/";
-        $dueDateFileDirectory = "images/";
+        $amountImgFileDirectory = "images/detection_results/";
+        $dueDateFileDirectory = "images/detection_results/";
         $amountImgFileName = "cropped1.jpg";
         $dueDateImgFileName = "cropped2.jpg";
 
