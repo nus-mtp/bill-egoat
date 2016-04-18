@@ -79,7 +79,7 @@ class AddBill extends CI_Controller {
 			$billID = $this->Maddbill_model->insert_bills($imgName);
 			
 			// Retrieve bill info
-			$data['bills_id'] = $this->Graph_model->get_graphdata($billID);
+			$data['bills_id'] = $this->Graph_model->get_graphdata($billID, 0);
 			$data['tags'] = $this->Maddbill_model->get_tags($billID);
             
             // Retrieve template info
@@ -88,7 +88,10 @@ class AddBill extends CI_Controller {
             // Take billID and templateID, pass into and run ocr function in background
             $data['filename'] = $this->Templates_model->ocr($billID,$templateID);
             
-			
+			// Retrieve updated bill info
+			$data['bills_id'] = $this->Graph_model->get_graphdata($billID, 0);
+			$data['tags'] = $this->Maddbill_model->get_tags($billID);
+            
 			// Redirect to verification/update bill
 			$data['title'] = "Update/Verify Bill";
 			$data['headline'] = "";
