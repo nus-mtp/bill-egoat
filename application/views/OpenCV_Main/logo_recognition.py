@@ -1,5 +1,5 @@
 # Authored by Tan Tack Poh
-# Logo detection algorithm (SIFT Feature Detection) for Bill.eGoat
+# Logo recognition algorithm (SIFT Feature Detection) for Bill.eGoat
 
 # import libraries
 import os
@@ -132,4 +132,4 @@ for x in matches:
 AnalyzedImg = drawMatches(userImg, kp1, DBImg, kp2, matches[:10])
 
 # Output matched image results
-cv2.imwrite('images/detection_result/detectionResult.jpg', AnalyzedImg)
+cv2.imwrite('images/detection_result/recognitionResult.jpg', AnalyzedImg)

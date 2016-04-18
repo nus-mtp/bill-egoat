@@ -1,23 +1,32 @@
 <?php
 
     /* @author Tan Tack Poh
-    ** Testing page to see if logo detection actually works
+    ** Testing page to see if logo recognition actually works
     ** Will remove due to security. Part of this will be incorporated into the view page where detection results will show.
     */
 
-    echo "Running logo detection" . "<br>" . PHP_EOL;
-    $command = escapeshellcmd('python /opt/bitnami/apache2/htdocs/application/views/OpenCV_Main/feature_matching.py');
+    // Parameters for the recognition result image's directory and file name, and the recognition algorithm file's too
+    $detectionFileDirectory = "/opt/bitnami/apache2/htdocs/application/views/OpenCV_Main/";
+    $resultDirectory = "/opt/bitnami/apache2/htdocs/images/detection_result/";
+    $detectionFileName = "logo_recognition.py";
+    $resultFileImgName = "recognitionResult.jpg";
+
+    // Test run the algorithm and output the result recognition image
+    echo "Running logo recognition" . "<br>" . PHP_EOL;
+    $command = escapeshellcmd('python ' . $detectionFileDirectory . $detectionFileName);
     shell_exec($command);
-    echo "Loading detectionResult.jpg (output of the py script)" . "<br>" . PHP_EOL;
-    $image2 = '/opt/bitnami/apache2/htdocs/images/detection_result/detectionResult.jpg';
+    echo "Loading " . $resultFileImgName . "<br>" . PHP_EOL;
+    $image2 = $resultDirectory . $resultFileImgName;
     
+    // check if the image is actually created. Creation implies successful run of algorithm
     if(file_exists($image2)){
         echo "The file has been processed" . "<br>" . PHP_EOL;
     } else {
         echo "The file has not been processed" . "<br>" . PHP_EOL;
     }
 
-    $command = escapeshellcmd('rm -f /opt/bitnami/apache2/htdocs/images/detection_result/detectionResult.jpg');
+    // remove the image once the check is complete.
+    $command = escapeshellcmd('rm -f ' . $resultDirectory . $resultFileImgName);
     shell_exec($command);
     
 ?>
