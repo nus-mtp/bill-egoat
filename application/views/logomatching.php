@@ -1,9 +1,9 @@
-/* @author Tan Tack Poh
-** Testing page to see if logo detection actually works
-** Will remove due to security. Part of this will be incorporated into the view page where detection results will show.
-*/
-
 <?php
+
+    /* @author Tan Tack Poh
+    ** Testing page to see if logo detection actually works
+    ** Will remove due to security. Part of this will be incorporated into the view page where detection results will show.
+    */
 
     echo "Running logo detection" . "<br>" . PHP_EOL;
     $command = escapeshellcmd('python /opt/bitnami/apache2/htdocs/application/views/OpenCV_Main/feature_matching.py');
