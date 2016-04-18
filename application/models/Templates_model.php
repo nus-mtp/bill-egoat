@@ -1,6 +1,6 @@
 <?php
 
-//@Author James Ho
+//@Author James Ho, refactored by Tan Tack Poh
 /*Bill Template System
 */   
 class Templates_model extends CI_Model {
@@ -46,7 +46,7 @@ class Templates_model extends CI_Model {
         
     }
     
-    //@Author Justin Doan
+    //@Author Justin Doan, refactored by Tan Tack Poh
     /*OCR processing, including reading the image, retrieving the coordinate data from the database,
       cropping out that part of the image and run OCR on it
       */   
