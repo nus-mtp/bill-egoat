@@ -11,15 +11,6 @@
  * @link     https://github.com/thiagoalessio/tesseract-ocr-for-php
  */
 
-/**
- * A wrapper to work with TesseractOCR inside PHP
- *
- * @category OCR
- * @package  TesseractOCR
- * @author   Thiago Alessio Pereira <thiagoalessio@me.com>
- * @license  http://opensource.org/licenses/MIT MIT
- * @link     https://github.com/thiagoalessio/tesseract-ocr-for-php
- */
 class TesseractOCR
 {
     /**
