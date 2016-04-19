@@ -7,8 +7,8 @@
 
     // Parameters for the recognition result image's directory and file name, and the recognition algorithm file's too
     $detectionFileDirectory = "application/views/OpenCV_Main/";
-    $resultDirectory = "images/detection_result/";
     $detectionFileName = "logo_recognition.py";
+    $resultDirectory = "images/detection_result/";  
     $resultFileImgName = "recognitionResult.jpg";
 
     // Test run the algorithm and output the result recognition image

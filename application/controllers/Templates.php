@@ -63,6 +63,7 @@ public function saveTemplateCoords()
 
    if (isset($_GET['submissionArray'])&&isset($_GET['templateID'])&&isset($_GET['billFilePath'])){
         $data['templateCoords'] = $_GET['submissionArray'];
+        $data['billFilePath'] = $_GET['billFilePath'];     
         $this->Templates_model->insert_datafields_table($_GET['submissionArray'],$_GET['templateID']);
         $this->Templates_model->insert_logodb_logo($_GET['billFilePath'], $_GET['templateID']);
         echo implode(" ", $data['templateCoords'][0])."/n".implode(" ", $data['templateCoords'][1])."/n".implode(" ", $data['templateCoords'][2]);
