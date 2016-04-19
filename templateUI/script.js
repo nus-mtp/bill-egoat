@@ -39,8 +39,6 @@ function startRect(event) {
     firstCornerX = event.pageX - bounds.left;
     firstCornerY = event.pageY - bounds.top;
     
-    firstCornerX = firstCornerX / 430.0;
-    firstCornerY = firstCornerY / 600.0;
         
     //mark down the top left coordinates
     /*
@@ -73,8 +71,6 @@ function endRect(event) {
     secondCornerX = event.pageX - bounds.left;
     secondCornerY = event.pageY - bounds.top;
     
-    secondCornerX = secondCornerX / 430.0;
-    secondCornerY = secondCornerY / 600.0;
     
     console.log(firstCornerX + " " + firstCornerY + " " + secondCornerX + " " + secondCornerY);
     
@@ -96,6 +92,11 @@ function endRect(event) {
 // WHEN USER CLICKS ON SUBMIT LOGO BUTTON by James
 $('#submitLogo').click(
     function(){
+    	firstCornerX = firstCornerX / 430.0;
+    	firstCornerY = firstCornerY / 600.0;
+    	secondCornerX = secondCornerX / 430.0;
+    	secondCornerY = secondCornerY / 600.0;
+    	
         logoFCX = firstCornerX;
         logoFCY = firstCornerY;
         logoSCX = secondCornerX;
@@ -107,6 +108,11 @@ $('#submitLogo').click(
 // WHEN USER CLICKS ON SUBMIT DATE BUTTON by James
 $('#submitDate').click(
     function(){
+    	firstCornerX = firstCornerX / 430.0;
+    	firstCornerY = firstCornerY / 600.0;
+    	secondCornerX = secondCornerX / 430.0;
+    	secondCornerY = secondCornerY / 600.0;
+    
         dateFCX = firstCornerX;
         dateFCY = firstCornerY;
         dateSCX = secondCornerX;
@@ -118,6 +124,11 @@ $('#submitDate').click(
 // WHEN USER CLICKS ON SUBMIT AMOUNT BUTTON by James
 $('#submitAmount').click(
     function(){
+    	firstCornerX = firstCornerX / 430.0;
+  		firstCornerY = firstCornerY / 600.0;
+  		secondCornerX = secondCornerX / 430.0;
+  		secondCornerY = secondCornerY / 600.0;
+    	
         amountFCX = firstCornerX;
         amountFCY = firstCornerY;
         amountSCX = secondCornerX;
@@ -131,9 +142,7 @@ $("#saveCoords").click(
         submissionArray = [logoCoords,dateCoords,amountCoords];
         div = document.getElementById("templateIDPassing");
         templateID = div.textContent;
-        div2 = document.getElementById("billFilePathPassing");
-        billFilePath = div2.textContent;
-        $.get("https://www.billegoat.gq/index.php/Templates/saveTemplateCoords", {'submissionArray': submissionArray, 'templateID': templateID, 'billFilePath': billFilePath})
+        $.get("https://www.billegoat.gq/index.php/Templates/saveTemplateCoords", {'submissionArray': submissionArray, 'templateID': templateID})
             .done(function( data ) {
               alert( "Data Load state: " + data ); })
             .fail( function(xhr, textStatus, errorThrown) {
