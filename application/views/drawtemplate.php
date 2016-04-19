@@ -27,10 +27,8 @@
     <div id="canvas">
     </div>
     
-    <div id="templateIDPassing" style="display: none;"><?php $output = $templateID; printf($output); ?>
-    </div>
-    <div id="billFilePathPassing" style="display: none;"><?php $output = $billFilePath; printf($output); ?>
-    </div>
+    <div id="templateIDPassing" style="display: none;"><?php $output = $templateID; printf("%s", $output); ?></div>
+    <div id="billFilePathPassing" style="display: none;"><?php $output = $billFilePath; printf("%s", $output); ?></div>
     
     <script src="https://www.billegoat.gq/templateUI/script.js"></script>
     
