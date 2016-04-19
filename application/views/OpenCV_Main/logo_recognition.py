@@ -117,8 +117,11 @@ def drawMatches(img1, kp1, img2, kp2, matches):
 
 # Read in user image input, and an image from database for detection (read in a grayscale)
 # Directory must be in full for py file (i.e start from opt bitnami folder)
+<<<<<<< HEAD
 userImg = cv2.imread('/opt/bitnami/apache2/htdocs/images/detection_result/queryImage.jpg', 0)
 DBImg = cv2.imread('/opt/bitnami/apache2/htdocs/images/detection_result/trainingImage.jpg', 0)
+=======
+>>>>>>> origin/master
 
 # Perform matching
 matches, kp1, kp2 = performMatching(userImg, DBImg);
