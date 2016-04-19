@@ -141,8 +141,10 @@ $("#saveCoords").click(
     function() {
         submissionArray = [logoCoords,dateCoords,amountCoords];
         div = document.getElementById("templateIDPassing");
+        div2 = document.getElementById("billFilePathDPassing");
         templateID = div.textContent;
-        $.get("https://www.billegoat.gq/index.php/Templates/saveTemplateCoords", {'submissionArray': submissionArray, 'templateID': templateID})
+        billFilePath = div2.textContent;
+        $.get("https://www.billegoat.gq/index.php/Templates/saveTemplateCoords", { 'submissionArray': submissionArray, 'templateID': templateID, 'billFilePath': billFilePath })
             .done(function( data ) {
               alert( "Data Load state: " + data ); })
             .fail( function(xhr, textStatus, errorThrown) {

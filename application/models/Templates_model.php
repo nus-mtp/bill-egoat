@@ -63,7 +63,7 @@ class Templates_model extends CI_Model {
 
     public function insert_logodb_logo($billFilePath, $templateID)
     {
-
+        $im = imagecreatefromjpeg($billFilePath);
         $LogoDBFilesDirectory = "images/logos_DB/";
 
         $query = $this->templatedb->query("SELECT coordinateLabelX, coordinateLabelY, coordinateLabelX2, coordinateLabelY2 FROM datafields WHERE templateID = " . $templateID ." AND dataFieldLabel = 'logo'");
@@ -75,7 +75,7 @@ class Templates_model extends CI_Model {
 
         //cropping the image using the coordinate data
         $to_crop_array = array('x' => $x1 , 'y' => $y1, 'width' => $x2, 'height'=> $y2);
-        $thumb_im = imagecrop($billFilePath, $to_crop_array);
+        $thumb_im = imagecrop($im, $to_crop_array);
 
         imagejpeg($thumb_im, $LogoDBFilesDirectory . $templateID . '.jpg', 100);
 

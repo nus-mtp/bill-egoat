@@ -116,20 +116,25 @@ def drawMatches(img1, kp1, img2, kp2, matches):
     return out
 
 # Read in user image input, and an image from database for detection (read in a grayscale)
-userImg = cv2.imread('images/logos_DB/singtel_logo_old_1.jpg', 0)
-DBImg = cv2.imread('images/logos_DB/singtel_logo_old_1.jpg', 0)
+# Directory must be in full for py file (i.e start from opt bitnami folder)
+userImg = cv2.imread('/opt/bitnami/apache2/htdocs/images/logos_DB/singtel_logo_old_1.jpg', 0)
+DBImg = cv2.imread('/opt/bitnami/apache2/htdocs/images/logos_DB/singtel_logo_old_1.jpg', 0)
 
 # Perform matching
 matches, kp1, kp2 = performMatching(userImg, DBImg);
 
+# initializing average
+distArray = np.empty( shape=(0, 0), dtype = np.float32 )
+
 # Print out distances, for debug only on console (not shown on browser)
-"""
 for x in matches:
-    print x.distance
-"""
+    distArray = np.append(distArray,np.float32(x.distance))   
 
 # Draw first 10 matches.
 AnalyzedImg = drawMatches(userImg, kp1, DBImg, kp2, matches[:10])
 
 # Output matched image results
-cv2.imwrite('images/detection_result/recognitionResult.jpg', AnalyzedImg)
+cv2.imwrite('/opt/bitnami/apache2/htdocs/images/detection_result/recognitionResult.jpg', AnalyzedImg)
+
+# return average
+print np.average(distArray)
