@@ -63,6 +63,7 @@ class Templates_model extends CI_Model {
 
     public function insert_logodb_logo($billFilePath, $templateID)
     {
+
         $im = imagecreatefromjpeg($billFilePath);
         $LogoDBFilesDirectory = "images/logos_DB/";
 

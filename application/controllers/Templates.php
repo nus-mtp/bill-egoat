@@ -60,8 +60,8 @@ public function saveTemplateCoords()
 {
     // Load the model
     $this->load->model('Templates_model','',TRUE);
-    
-    if (isset($_GET['submissionArray'])&&isset($_GET['templateID'])&&isset($_GET['billFilePath'])){
+
+   if (isset($_GET['submissionArray'])&&isset($_GET['templateID'])&&isset($_GET['billFilePath'])){
         $data['templateCoords'] = $_GET['submissionArray'];
         $this->Templates_model->insert_datafields_table($_GET['submissionArray'],$_GET['templateID']);
         $this->Templates_model->insert_logodb_logo($_GET['billFilePath'], $_GET['templateID']);
