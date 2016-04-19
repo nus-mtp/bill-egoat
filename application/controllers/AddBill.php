@@ -84,8 +84,9 @@ class AddBill extends CI_Controller {
             
             // Retrieve template info
             $templateID = $this->Templates_model->get_template_id($this->input->post('billOrg'));
-            
-            // 
+
+            // Run logo recognition to retrieve the best matched billing organisation name
+            //$data['templateID'] = $this->Templates_model->logoRecognition($billID);
 
             // Take billID and templateID, pass into and run ocr function in background
             $data['filename'] = $this->Templates_model->ocr($billID,$templateID);

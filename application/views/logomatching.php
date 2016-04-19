@@ -6,8 +6,8 @@
     */
 
     // Parameters for the recognition result image's directory and file name, and the recognition algorithm file's too
-    $detectionFileDirectory = "/opt/bitnami/apache2/htdocs/application/views/OpenCV_Main/";
-    $resultDirectory = "/opt/bitnami/apache2/htdocs/images/detection_result/";
+    $detectionFileDirectory = "application/views/OpenCV_Main/";
+    $resultDirectory = "images/detection_result/";
     $detectionFileName = "logo_recognition.py";
     $resultFileImgName = "recognitionResult.jpg";
 

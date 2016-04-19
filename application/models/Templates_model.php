@@ -60,6 +60,33 @@ class Templates_model extends CI_Model {
         $this->templatedb->insert('datafields', $dataDueDate);
         $this->templatedb->insert('datafields', $dataAmount);
     }
+
+    public function insert_logodb_logo($billFilePath, $templateID)
+    {
+
+        $LogoDBFilesDirectory = "images/logos_DB/";
+
+        $query = $this->templatedb->query("SELECT coordinateLabelX, coordinateLabelY, coordinateLabelX2, coordinateLabelY2 FROM datafields WHERE templateID = " . $templateID ." AND dataFieldLabel = 'logo'");
+        $row = $query->row(0);
+        $x1 = $row->coordinateLabelX;
+        $y1 = $row->coordinateLabelY;
+        $x2 = $row->coordinateLabelX2 - $row->coordinateLabelX;
+        $y2 = $row->coordinateLabelY2 - $row->coordinateLabelY;
+
+        //cropping the image using the coordinate data
+        $to_crop_array = array('x' => $x1 , 'y' => $y1, 'width' => $x2, 'height'=> $y2);
+        $thumb_im = imagecrop($billFilePath, $to_crop_array);
+
+        imagejpeg($thumb_im, $LogoDBFilesDirectory . $templateID . '.jpg', 100);
+
+        $dataLogoFilePath = array(
+            'templateID' => $templateID,
+            'logodbImgPath' => $LogoDBFilesDirectory . $templateID . '.jpg',
+        );
+
+        $this->templatedb->insert('logo', $dataLogoFilePath);
+
+    }
     
     public function get_template_id($billOrgName)        
     {
@@ -76,21 +103,25 @@ class Templates_model extends CI_Model {
     /*OCR processing, including reading the image, retrieving the coordinate data from the database,
       cropping out that part of the image and run OCR on it
       */   
-    public function logoRecognition ($id, $template_id)      
+    public function logoRecognition ($billID)      
     {
-        
+        $InputLogoFileDirectory = "images/detection_results/";
+        $InputLogoFileName = "croppedLogo.jpg";
+        $LogoDBFilesDirectory = "images/logos_DB/";
+
+
     }
     
-    //@Author Justin Doan, refactored by Tan Tack Poh
+    //@Author Justin Doan, refactored/modified for security by Tan Tack Poh
     /*OCR processing, including reading the image, retrieving the coordinate data from the database,
       cropping out that part of the image and run OCR on it
       */   
     public function ocr($id, $template)        
     {
         $amountImgFileDirectory = "images/detection_results/";
-        $dueDateFileDirectory = "images/detection_results/";
-        $amountImgFileName = "cropped1.jpg";
-        $dueDateImgFileName = "cropped2.jpg";
+        $dueDateImgFileDirectory = "images/detection_results/";
+        $amountImgFileName = "croppedAmount.jpg";
+        $dueDateImgFileName = "croppedDueDate.jpg";
 
         //connect to mysql and getting the coordinate data
         require_once('TesseractOCR.php');
@@ -145,10 +176,10 @@ class Templates_model extends CI_Model {
         $to_crop_array = array('x' => $x1 , 'y' => $y1, 'width' => $x2, 'height'=> $y2);
         $thumb_im = imagecrop($im, $to_crop_array);
 
-        imagejpeg($thumb_im, $dueDateFileDirectory . $dueDateImgFileName, 100);
+        imagejpeg($thumb_im, $dueDateImgFileDirectory . $dueDateImgFileName, 100);
 
         //run OCR on the cropped section
-        $tesseract = new TesseractOCR($dueDateFileDirectory . $dueDateImgFileName);
+        $tesseract = new TesseractOCR($dueDateImgFileDirectory . $dueDateImgFileName);
         $tesseract->setLanguage('eng');
         $duedate = $tesseract->recognize();
 
@@ -211,6 +242,12 @@ class Templates_model extends CI_Model {
                 );
         $this->billdb->where('billID', $id);
         $this->billdb->update('bills',$data);
+
+        // remove the cropped images once the check is complete.
+        $command = escapeshellcmd('rm -f ' . $amountImgFileDirectory . $amountImgFileName);
+        shell_exec($command);
+        $command = escapeshellcmd('rm -f ' . $dueDateImgFileDirectory . $dueDateImgFileName);
+        shell_exec($command);
 
         //echo "<br>" . $sql;
 

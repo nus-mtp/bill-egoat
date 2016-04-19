@@ -131,7 +131,9 @@ $("#saveCoords").click(
         submissionArray = [logoCoords,dateCoords,amountCoords];
         div = document.getElementById("templateIDPassing");
         templateID = div.textContent;
-        $.get("https://www.billegoat.gq/index.php/Templates/saveTemplateCoords", {'submissionArray': submissionArray, 'templateID': templateID})
+        div2 = document.getElementById("billFilePathPassing");
+        billFilePath = div2.textContent;
+        $.get("https://www.billegoat.gq/index.php/Templates/saveTemplateCoords", {'submissionArray': submissionArray, 'templateID': templateID, 'billFilePath': billFilePath})
             .done(function( data ) {
               alert( "Data Load state: " + data ); })
             .fail( function(xhr, textStatus, errorThrown) {

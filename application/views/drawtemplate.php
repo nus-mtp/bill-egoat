@@ -29,6 +29,8 @@
     
     <div id="templateIDPassing" style="display: none;"><?php $output = $templateID; printf($output); ?>
     </div>
+    <div id="billFilePathPassing" style="display: none;"><?php $output = $billFilePath; printf($output); ?>
+    </div>
     
     <script src="https://www.billegoat.gq/templateUI/script.js"></script>
     
