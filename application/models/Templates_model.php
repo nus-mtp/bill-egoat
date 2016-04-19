@@ -25,6 +25,41 @@ class Templates_model extends CI_Model {
 		$this->templatedb->insert('templates', $data);
 		return $id = $this->db->insert_id();
 	}
+
+    public function insert_datafields_table($templateCoords,$templateID)
+    {
+        
+        $dataLogo = array(
+            'templateID' => $templateID,
+            'dataFieldLabel' => "logo",
+            'coordinateLabelX' => $templateCoords[0][0],
+            'coordinateLabelY' => $templateCoords[0][1],
+            'coordinateLabelX2' => $templateCoords[0][2],
+            'coordinateLabelY2' => $templateCoords[0][3],
+        );
+        
+        $dataDueDate = array(
+            'templateID' => $templateID,
+            'dataFieldLabel' => "duedate",
+            'coordinateLabelX' => $templateCoords[1][0],
+            'coordinateLabelY' => $templateCoords[1][1],
+            'coordinateLabelX2' => $templateCoords[1][2],
+            'coordinateLabelY2' => $templateCoords[1][3],
+        );
+        
+        $dataAmount = array(
+            'templateID' => $templateID,
+            'dataFieldLabel' => "amount",
+            'coordinateLabelX' => $templateCoords[2][0],
+            'coordinateLabelY' => $templateCoords[2][1],
+            'coordinateLabelX2' => $templateCoords[2][2],
+            'coordinateLabelY2' => $templateCoords[2][3],
+        );
+        
+        $this->templatedb->insert('datafields', $dataLogo);
+        $this->templatedb->insert('datafields', $dataDueDate);
+        $this->templatedb->insert('datafields', $dataAmount);
+    }
     
     public function get_template_id($billOrgName)        
     {
