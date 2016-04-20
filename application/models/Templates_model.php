@@ -35,6 +35,7 @@ class Templates_model extends CI_Model {
 	// @Reviewer Daryl Lim, Tack Poh
     // Write into SQL table the coordinates data of parts of template (table is templatedb -> datafields)
     public function insert_datafields_table($templateCoords,$templateID)
+
     {
         $dataLogo = array
 		(
@@ -69,46 +70,50 @@ class Templates_model extends CI_Model {
         $this->templatedb->insert('datafields', $dataLogo);
         $this->templatedb->insert('datafields', $dataDueDate);
         $this->templatedb->insert('datafields', $dataAmount);
+
     }
 
     // @Author Tan Tack Poh
-	// @Reviewer Daryl Lim
+    // @reviewer Daryl Lim
     // Create a logo for the database for a first time template creation for an organisation
     public function insert_logodb_logo($billFilePath, $templateID)
     {
-		$im = imagecreatefromjpeg($billFilePath);
-		$LogoDBFilesDirectory = "images/logos_DB/";
-		list($width, $height) = getimagesize($billFilePath);
 
-		$query = $this->templatedb->query("SELECT coordinateLabelX, coordinateLabelY, coordinateLabelX2, coordinateLabelY2 FROM datafields WHERE templateID = '" . $templateID ."' AND dataFieldLabel = 'logo'");
-		$row = $query->row(0);
-		$x1 = $row->coordinateLabelX;
-		$y1 = $row->coordinateLabelY;
-		$x2 = $row->coordinateLabelX2 - $row->coordinateLabelX;
-		$y2 = $row->coordinateLabelY2 - $row->coordinateLabelY;
+        $im = imagecreatefromjpeg($billFilePath);
+        $LogoDBFilesDirectory = "images/logos_DB/";
+        list($width, $height) = getimagesize($billFilePath);
 
-		$x1 = $x1 * $width;
-		$y1 = $y1 * $height;
-		$x2 = $x2 * $width;
-		$y2 = $y2 * $height;
-		
-		//cropping the image using the coordinate data
-		$to_crop_array = array('x' => $x1 , 'y' => $y1, 'width' => $x2, 'height'=> $y2);
-		$thumb_im = imagecrop($im, $to_crop_array);
+        // Get correct coordinate for logo, scaled down to between 0 to 1
+        $query = $this->templatedb->query("SELECT coordinateLabelX, coordinateLabelY, coordinateLabelX2, coordinateLabelY2 FROM datafields WHERE templateID = '" . $templateID ."' AND dataFieldLabel = 'logo'");
+        $row = $query->row(0);
+        $x1 = $row->coordinateLabelX;
+        $y1 = $row->coordinateLabelY;
+        $x2 = $row->coordinateLabelX2 - $row->coordinateLabelX;
+        $y2 = $row->coordinateLabelY2 - $row->coordinateLabelY;
 
-		imagejpeg($thumb_im, $LogoDBFilesDirectory . $templateID . '.jpg', 100);
+        // Scale up coordinates from 0 to 1 to actual coordinates
+        $x1 = $x1 * $width;
+        $y1 = $y1 * $height;
+        $x2 = $x2 * $width;
+        $y2 = $y2 * $height;
 
-		$dataLogoFilePath = array
-		(
-			'templateID' => $templateID,
-			'logodbImgPath' => $LogoDBFilesDirectory . $templateID . '.jpg',
-		);
-		
-		$this->templatedb->insert('logo', $dataLogoFilePath);
-	}
+        //cropping the image using the coordinate data
+        $to_crop_array = array('x' => $x1 , 'y' => $y1, 'width' => $x2, 'height'=> $y2);
+        $thumb_im = imagecrop($im, $to_crop_array);
+
+        imagejpeg($thumb_im, $LogoDBFilesDirectory . $templateID . '.jpg', 100);
+
+        // Store into SQL table
+        $dataLogoFilePath = array(
+            'templateID' => $templateID,
+            'logodbImgPath' => $LogoDBFilesDirectory . $templateID . '.jpg',
+        );
+
+        $this->templatedb->insert('logo', $dataLogoFilePath);
+
+    }
     
     // @Author James Ho
-	// @reviewer Daryl Lim
     // Obtain Template ID
     public function get_template_id($billOrgName)        
     {
@@ -116,6 +121,7 @@ class Templates_model extends CI_Model {
         $this->templatedb->where('billOrg', $billOrgName);
         $query = $this->templatedb->get('templates');
         $result = $query->result();
+
 		if (empty($result))
 		{
 			$template_id = 0;
@@ -124,6 +130,7 @@ class Templates_model extends CI_Model {
 		{
 			$template_id = $result[0]->templateID;
 		}
+
         return $template_id;
         
     }
@@ -132,6 +139,7 @@ class Templates_model extends CI_Model {
     /*Use Template ID to obtain already existing template details, then perform logo recognition
     */   
     public function logoRecognition ($billID, $templateID)      
+
     {
         // Bill Image
         $this->billdb->select('billFilePath');
@@ -171,7 +179,7 @@ class Templates_model extends CI_Model {
 
         //cropping the image using the coordinate data
         $to_crop_array = array('x' => $x1 , 'y' => $y1, 'width' => $x2, 'height'=> $y2);
-		
+
 		if ($templateID != 0)
 		{
 			$thumb_im = imagecrop($im, $to_crop_array);
@@ -184,7 +192,11 @@ class Templates_model extends CI_Model {
         imagejpeg($thumb_im, $detectionInputDirectory . $detectionInputImgName, 100);
         $logo_DB = scandir($LogoDBFilesDirectory);
 
-        foreach($logo_DB as &$logoDBImgName){   
+        foreach($logo_DB as &$logoDBImgName)
+        {
+
+            // comment any set of command pair to debug   
+
             // copy current database logo to detection folder as different name for py file to process
             $command = escapeshellcmd('cp ' . $LogoDBFilesDirectory . $logoDBImgName . " " . $detectionInputDirectory . $detectionInputTrainingImgName);
             shell_exec($command);
@@ -200,29 +212,26 @@ class Templates_model extends CI_Model {
             // delete current database logo from detection folder when done
             $command = escapeshellcmd('rm -f ' . $detectionInputDirectory . $detectionInputTrainingImgName);
             shell_exec($command);
+
         }
+
         // delete current query logo from detection folder when done
         $command = escapeshellcmd('rm -f ' . $detectionInputDirectory . $detectionInputImgName);
         shell_exec($command); 
+
     }
 
     //@Author Justin Doan, refactored/modified for security by Tan Tack Poh
-
     /*OCR processing, including reading the image, retrieving the coordinate data from the database,
-
       cropping out that part of the image and run OCR on it
-
-      */   
-
+    */   
     public function ocr($billID, $template)        
-
     {
-        $amountImgFileDirectory = "images/detection_result/";
 
+        $amountImgFileDirectory = "images/detection_result/";
         $dueDateImgFileDirectory = "images/detection_result/";
 
         $amountImgFileName = "croppedAmt.jpg";
-
         $dueDateImgFileName = "croppedDueDate.jpg";
 
         //connect to mysql and getting the coordinate data
@@ -245,16 +254,13 @@ class Templates_model extends CI_Model {
 
         // Scale Up coordinates
         $x1 = $x1 * $width;
-
         $y1 = $y1 * $height;
-
         $x2 = $x2 * $width;
-
         $y2 = $y2 * $height;
 
         //cropping the image using the coordinate data
         $to_crop_array = array('x' => $x1 , 'y' => $y1, 'width' => $x2, 'height'=> $y2);
-		
+
 		if ($template != 0)
 		{
 			$thumb_im = imagecrop($im, $to_crop_array);
@@ -281,16 +287,13 @@ class Templates_model extends CI_Model {
 
         // Scale Up coordinates
         $x1 = $x1 * $width;
-
         $y1 = $y1 * $height;
-
         $x2 = $x2 * $width;
-
         $y2 = $y2 * $height;
         
         //cropping the image using the coordinate data
         $to_crop_array = array('x' => $x1 , 'y' => $y1, 'width' => $x2, 'height'=> $y2);
-        
+
 		if ($template != 0)
 		{
 			$thumb_im = imagecrop($im, $to_crop_array);
