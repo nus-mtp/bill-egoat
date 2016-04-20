@@ -144,10 +144,9 @@ $("#saveCoords").click(
         div2 = document.getElementById("billFilePathPassing");
         templateID = div.textContent;
         billFilePath = div2.textContent;
-
         $.get("https://www.billegoat.gq/index.php/Templates/saveTemplateCoords", { 'submissionArray': submissionArray, 'templateID': templateID, 'billFilePath': billFilePath })
             .done(function( data ) {
-              alert( "Data Load state: " + data ); })
+              alert( "Template creation status: " + data ); })
             .fail( function(xhr, textStatus, errorThrown) {
                 alert(xhr.responseText);
               });
