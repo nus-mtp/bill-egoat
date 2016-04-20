@@ -3,6 +3,8 @@
 
 # import libraries
 import os
+import sys
+import getopt
 import numpy as np
 import cv2
 from matplotlib import pyplot as plt
@@ -115,10 +117,38 @@ def drawMatches(img1, kp1, img2, kp2, matches):
     # Also return the image if you'd like a copy
     return out
 
+queryImgDir = ''
+DBImgDir = ''
+OutDir = ''
+AveOutDir = ''
+
+# read in parameter
+try:
+    opts, args = getopt.getopt(sys.argv[1:],"q:d:o:f:",["qfile=","dfile=","ofile=","ffile="])
+except getopt.GetoptError:
+    print 'test.py -q <queryfile> -d <dbfile> -o <outputfile> -f <averageoutputfile>'
+    sys.exit(2)
+for opt, arg in opts:
+    if opt in ("-q", "--qfile"):
+        queryImgDir = arg
+    elif opt in ("-d", "--dfile"):
+        DBImgDir = arg
+    elif opt in ("-o", "--ofile"):
+        OutDir = arg
+    elif opt in ("-f", "--ffile"):
+        AveOutDir = arg
+
+print queryImgDir
+print DBImgDir
+print OutDir
+print AveOutDir
+
 # Read in user image input, and an image from database for detection (read in a grayscale)
 # Directory must be in full for py file (i.e start from opt bitnami folder)
-userImg = cv2.imread('/opt/bitnami/apache2/htdocs/images/detection_result/queryImage.jpg', 0)
-DBImg = cv2.imread('/opt/bitnami/apache2/htdocs/images/detection_result/trainingImage.jpg', 0)
+# userImg = cv2.imread('/opt/bitnami/apache2/htdocs/images/detection_result/queryImage.jpg', 0)
+# DBImg = cv2.imread('/opt/bitnami/apache2/htdocs/images/detection_result/trainingImage.jpg', 0)
+userImg = cv2.imread(queryImgDir, 0)
+DBImg = cv2.imread(DBImgDir, 0)
 
 # Perform matching
 matches, kp1, kp2 = performMatching(userImg, DBImg);
@@ -134,7 +164,11 @@ for x in matches:
 AnalyzedImg = drawMatches(userImg, kp1, DBImg, kp2, matches[:10])
 
 # Output matched image results
-cv2.imwrite('/opt/bitnami/apache2/htdocs/images/detection_result/recognitionResult.jpg', AnalyzedImg)
+# cv2.imwrite('/opt/bitnami/apache2/htdocs/images/detection_result/recognitionResult.jpg', AnalyzedImg)
+cv2.imwrite(OutDir, AnalyzedImg)
 
 # return average
 print np.average(distArray)
+f = open(AveOutDir,'w')
+f.write(str(np.average(distArray))) # python will convert \n to os.linesep
+f.close()

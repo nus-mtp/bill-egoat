@@ -11,6 +11,7 @@ class Maddbill_model extends CI_Model
 	
 		$CI = &get_instance();
 		$this->billdb = $CI->load->database('billdb', TRUE); // Load DB to be used
+        $this->templatedb = $CI->load->database('templatedb', TRUE); // Load DB to be used
 	}
 	
 	/* Inserts form fields into DB billdb.bills
@@ -111,6 +112,24 @@ class Maddbill_model extends CI_Model
 		// Delete bill and image
 		$this->del_curr_img($billID);
 		$query = $this->billdb->delete('bills', array('billID' => $billID));
+
+		return $billID;
+    }
+
+    /* Updates billing template and org name
+	** @author Daryl Lim
+	** @Parameter: billID
+	*/
+    public function update_bill_auto($billID, $templateID) 
+    {		
+        $query = $this->billdb->query("UPDATE billdb.bills SET templateID = '".$templateID."' WHERE billID ='".$billID."'");
+        
+        $query = $this->templatedb->query("SELECT billOrg FROM templatedb.templates WHERE templateID ='".$templateID."'");
+        $billOrgArr = $query->result_array();
+
+        $billOrg = $billOrgArr[0]['billOrg'];
+
+        $query = $this->billdb->query("UPDATE billdb.bills SET billOrg = '".$billOrg."' WHERE billID ='".$billID."'");
 
 		return $billID;
     }

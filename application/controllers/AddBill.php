@@ -48,8 +48,8 @@ class AddBill extends CI_Controller {
 		
 		// Attempt upload of image
 		$imgName = $this->Maddbill_model->upload();
-		
-		// Validate Billing organisation
+
+        // Validate Billing organisation
 		$this->form_validation->set_rules('billOrg', 'Billing Organisation', 'alpha_numeric');
 		
 		// Validate image extension
@@ -84,12 +84,40 @@ class AddBill extends CI_Controller {
             
             // Retrieve template info
             $templateID = $this->Templates_model->get_template_id($this->input->post('billOrg'));
+            
+            if ($templateID == 0)
+            {
+                $tempIDArr = $this->Templates_model->get_templates();
 
-            // Run logo recognition to retrieve the best matched billing organisation name
-            $data['templateID'] = $this->Templates_model->logoRecognition($billID,$templateID);
+                $average = INF;
+                $detectedOrg = "Unknown";
+                foreach ($tempIDArr as $row)
+                {
+                    if ($row['templateID'] != 0)
+                    {
+                        $detectArr = $this->Templates_model->logoRecognition($billID, $row['templateID']);
+                        if ($detectArr[0] < $average)
+                        {
+                            $average = $detectArr[0];
+                            $detectedOrg = $detectArr[1];
+                        }
+                    }
+                }
 
-            // Take billID and templateID, pass into and run ocr function in background
-            $data['filename'] = $this->Templates_model->ocr($billID,$templateID);
+                $data['templateID'] = $detectedOrg;
+                $this->Maddbill_model->update_bill_auto($billID, $detectedOrg); 
+                // Take billID and templateID, pass into and run ocr function in background
+                $data['filename'] = $this->Templates_model->ocr($billID,$detectedOrg);
+            }
+            else
+            {
+                // Run logo recognition to retrieve the best matched billing organisation name
+                $data['templateID'] = $templateID;
+                // Take billID and templateID, pass into and run ocr function in background
+                $data['filename'] = $this->Templates_model->ocr($billID,$templateID);
+            }
+
+            
             
 			// Retrieve updated bill info
 			$data['bills_id'] = $this->Graph_model->get_graphdata($billID, 0);
@@ -101,6 +129,7 @@ class AddBill extends CI_Controller {
 			$data['include'] = 'updateBill_view';
 			$this->load->vars($data);
 			$this->load->view('template');
+            
 		}
 	}
 	

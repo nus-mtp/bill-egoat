@@ -134,8 +134,18 @@ class Templates_model extends CI_Model {
         return $template_id;
         
     }
+
+        
+    // @Author Daryl Lim
+    // Obtain The entire column consisting of templateID
+    public function get_templates()        
+    {
+        $this->templatedb->select('templateID');
+        $query = $this->templatedb->get('templates');
+        return $query->result_array();
+    }
     
-    //@Author and refactored by Tan Tack Poh
+    //@Author and refactored by Tan Tack Poh and Daryl Lim
     /*Use Template ID to obtain already existing template details, then perform logo recognition
     */   
     public function logoRecognition ($billID, $templateID)      
@@ -156,12 +166,17 @@ class Templates_model extends CI_Model {
 
         // Training Logo Directory
         $LogoDBFilesDirectory = "images/logos_DB/";
-        $detectionInputTrainingImgName = "trainingImage.jpg"; // Hardcoded training input as OpenCV doesn't handle arguments
 
         // Parameters for the recognition result image's directory and file name, and the recognition algorithm file's too
         $detectionFileDirectory = "application/views/OpenCV_Main/";
         $detectionFileName = "logo_recognition.py";  
         $resultFileImgName = "recognitionResult.jpg"; // Hardcoded output as OpenCV doesn't handle arguments
+
+        // txt file containing average value
+        $AverageFileTxtName = "averageValue.txt";
+
+        // Append this to the front to make a full directory of server
+        $fullDirAppend = "/opt/bitnami/apache2/htdocs/";
 
         // Get correct coordinate for logo, scaled down to between 0 to 1
         $query = $this->templatedb->query("SELECT coordinateLabelX, coordinateLabelY, coordinateLabelX2, coordinateLabelY2 FROM datafields WHERE templateID = '" . $templateID ."' AND dataFieldLabel = 'logo'");
@@ -192,32 +207,45 @@ class Templates_model extends CI_Model {
         imagejpeg($thumb_im, $detectionInputDirectory . $detectionInputImgName, 100);
         $logo_DB = scandir($LogoDBFilesDirectory);
 
+        $currentMostMatchedLogoTemplateID = 0;
+        $currentMinAve = INF;
+
         foreach($logo_DB as &$logoDBImgName)
         {
+            // Run Detection (Note: must be in full directory for py to work!)
+            
+            if ((($logoDBImgName != ".")&&($logoDBImgName != "..")))
+            {
+                
+                $command = escapeshellcmd('python ' . $detectionFileDirectory . $detectionFileName . ' -q '. $fullDirAppend . $detectionInputDirectory . $detectionInputImgName. ' -d '. $fullDirAppend . $LogoDBFilesDirectory . $logoDBImgName . ' -o '. $fullDirAppend . $detectionInputDirectory . $resultFileImgName . ' -f '. $fullDirAppend . $detectionInputDirectory . $AverageFileTxtName);
+                shell_exec($command);
 
-            // comment any set of command pair to debug   
+               // echo 'python ' . $detectionFileDirectory . $detectionFileName . ' -q '. $fullDirAppend . $detectionInputDirectory . $detectionInputImgName. ' -d '. $fullDirAppend . $LogoDBFilesDirectory . $logoDBImgName . ' -o '. $fullDirAppend . $detectionInputDirectory . $resultFileImgName . ' -f '. $fullDirAppend . $detectionInputDirectory . $AverageFileTxtName;
 
-            // copy current database logo to detection folder as different name for py file to process
-            $command = escapeshellcmd('cp ' . $LogoDBFilesDirectory . $logoDBImgName . " " . $detectionInputDirectory . $detectionInputTrainingImgName);
-            shell_exec($command);
+               // echo "average is " . file_get_contents( $detectionInputDirectory . $AverageFileTxtName );
 
-            // Run Detection
-            $command = escapeshellcmd('python ' . $detectionFileDirectory . $detectionFileName);
-            shell_exec($command);
+                $currentAve = file_get_contents( $detectionInputDirectory . $AverageFileTxtName );
 
-            // remove the image once the check is complete.
-            $command = escapeshellcmd('rm -f ' . $detectionInputDirectory . $resultFileImgName);
-            shell_exec($command);
+                if($currentMinAve > $currentAve){
+                    $currentMinAve = $currentAve;
+                    $currentMostMatchedLogoTemplateID = substr($logoDBImgName ,0, -4); 
+                }
 
-            // delete current database logo from detection folder when done
-            $command = escapeshellcmd('rm -f ' . $detectionInputDirectory . $detectionInputTrainingImgName);
-            shell_exec($command);
+               // echo "current min average is " . $currentMinAve;
+               // echo "current logo template ID with min ave is " . $currentMostMatchedLogoTemplateID . ".jpg";
 
+                // remove the detecion algo image once the check is complete.
+                //$command = escapeshellcmd('rm -f ' . $detectionFileDirectory . $resultFileImgName);
+                //shell_exec($command);
+            }
         }
 
+        $detectArr = [$currentMinAve, $currentMostMatchedLogoTemplateID];
+        return $detectArr;
+
         // delete current query logo from detection folder when done
-        $command = escapeshellcmd('rm -f ' . $detectionInputDirectory . $detectionInputImgName);
-        shell_exec($command); 
+        //$command = escapeshellcmd('rm -f ' . $detectionInputDirectory . $detectionInputImgName);
+        //shell_exec($command); 
 
     }
 
