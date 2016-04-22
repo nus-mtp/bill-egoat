@@ -1,6 +1,11 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
+/* Index page controller
+** @author James Ho
+** @reviewer Daryl Lim
+*/
+
 class Welcome extends CI_Controller {
 
 	/**
@@ -22,7 +27,7 @@ class Welcome extends CI_Controller {
 	{
 		$this->load->view('welcome_message');
 	}
-	
+
 	function signup(){
 		if ($this->input->post('userEmail')){
 			$this->load->model('signup_model','',TRUE);
@@ -35,7 +40,7 @@ class Welcome extends CI_Controller {
 			redirect('refresh');
 		}
 	}
-	
+
 	function thankyou(){
 	  $data['title'] = "Thank You!";
 	  $data['headline'] = "Thanks!";

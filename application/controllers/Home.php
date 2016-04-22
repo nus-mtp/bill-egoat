@@ -1,18 +1,25 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
- class Home extends CI_Controller{
-	function __construct(){
-		parent::__construct();
-		$this->check_isvalidated();
-		
-		// Check if username exists in session
-		if ($this->session->userdata('userID') === NULL)
+	/* Login verification controller
+	** @author James Ho
+	** @reviewer Daryl Lim
+	*/
+	
+	class Home extends CI_Controller
+	{
+		function __construct()
 		{
-			// User is not logged in, redirect to login screen
-			$data['msg'] = "Please log in to access page";
-			redirect('login', $data);
+			parent::__construct();
+			$this->check_isvalidated();
+		
+			// Check if username exists in session
+			if ($this->session->userdata('userID') === NULL)
+			{
+				// User is not logged in, redirect to login screen
+				$data['msg'] = "Please log in to access page";
+				redirect('login', $data);
+			}
 		}
-	}
 	
 	public function index(){
 		$data['title'] = "Dashboard";
@@ -22,8 +29,10 @@
 	    $this->load->view('template');
 	}
 	
-	private function check_isvalidated(){
-		if(! $this->session->userdata('validated')){
+	private function check_isvalidated()
+	{
+		if(! $this->session->userdata('validated'))
+		{
 			redirect('login');
 		}
 	}

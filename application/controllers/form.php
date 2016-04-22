@@ -1,5 +1,10 @@
 <?php
 
+/* Controller to perform form validation for signup form
+** @author James Ho
+** @reviewer Daryl Lim
+*/
+
 class Form extends CI_Controller {
 
 	public function index()

@@ -1,24 +1,28 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-/* Controller to logout
-** @author Daryl Lim
-*/
-class Logout extends CI_Controller{
-	
-	function __construct()
-	{
-		parent::__construct();
-	}
-	
-	public function index()
-	{
-		$this->session->sess_destroy();
+	/* Controller to logout
+	** @author Daryl Lim
+	** @reviewer Yunhan
+	*/
+	class Logout extends CI_Controller{
 		
-		$data['title'] = "";
-		$data['headline'] = "";
-		$data['include'] = 'welcome_message';
-		$this->load->vars($data);
+		function __construct()
+		{
+			parent::__construct();
+			
+			$this->load->helper('url');
+		}
 		
-		$this->load->view('template');
+		public function index()
+		{
+			$this->session->sess_destroy();
+			
+			$data['title'] = "Login";
+			$data['headline'] = "";
+			$data['msg'] = "";
+			$data['include'] = 'login_view';
+			$this->load->vars($data);
+			
+			$this->load->view('template');
+		}
 	}
-}
 ?>

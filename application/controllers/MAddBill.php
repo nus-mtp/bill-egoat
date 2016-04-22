@@ -2,6 +2,7 @@
 
 /* Controller to manually add/update bills
 ** @author Daryl Lim
+** @reviewer James Ho
 */
 class MAddBill extends CI_Controller {
 
