@@ -138,45 +138,7 @@
         echo form_close();
 		//</form>
 ?>
-<!-- stop PHP Code -->		
-		
-
-<!--if(isset($_POST['signupbtn']) && !empty($_POST['firstName']) && !empty($_POST['lastName']) && !empty($_POST['userEmail']) && !empty($_POST['userPassword'])  )
-{
-    $firstName =  $this->db->real_escape_string($_POST['firstName']);
-	$lastName =  $this->db->real_escape_string($_POST['lastName']);
-    $userEmail =  $this->db->real_escape_string($_POST['userEmail']);
-    $userPassword =  $this->db->real_escape_string($_POST['userPassword']);
-	
-	if(eregi("^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$", $userEmail))
-	{
-    	mysqli_connect("localhost", "root", "ysAb7cEkjvOa") or die(mysqli_error()); 
-		mysqli_select_db("userDB") or die(mysqli_error()); 
-		$hash=md5( rand(0,1000) );
-		
-		mysql_query("INSERT INTO users (passwd, userEmail, isPartnerOrg, failedLoginNo, isActivated, activationCode) VALUES(
-		'".  $this->db->real_escape_string(md5($userPassword)) ."', 
-		'".  $this->db->real_escape_string($userEmail) ."', 
-		FALSE,
-		0,
-		FALSE,
-		'".  $this->db->real_escape_string($hash) ."') ") or die(mysqli_error());
-		
-		mysqli_query("INSERT INTO emails (userID, userEmail, isReminderEmail, isRecoveryEmail) VALUES(
-		(SELECT userID FROM users WHERE userEmail='".$userEmail."'),
-		'".  $this->db->real_escape_string($userEmail) ."', 
-		TRUE,
-		TRUE)")or die(mysqli_error());	
-
-		mysqli_query("INSERT INTO userprefs (userID, realName) VALUES(
-		(SELECT userID FROM users WHERE userEmail='".$userEmail."'),
-		CONCAT_WS(' ','".  $this->db->real_escape_string($firstName) ."', '".  $this->db->real_escape_string($lastName) ."'
-		))")or die(mysqli_error());
-
-}
-}          
--->
-		
+<!-- stop PHP Code -->			
 		
         <div class="col-md-12">
           <h3>By clicking &quot;Sign Up&quot; I agree to Bill.eGoat&#39;s 

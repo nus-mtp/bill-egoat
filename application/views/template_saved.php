@@ -1,8 +1,8 @@
 <html>
-<body>
-	<?php
-        echo templateCoords;
+    <body>
+	    <?php
+            echo templateCoords;
     
-	?>
-</body>
+	    ?>
+    </body>
 </html>

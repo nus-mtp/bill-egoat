@@ -1,3 +1,8 @@
+<!--
+/* Landing page (old)
+** @author Daryl Lim, PHP & Porting (Login/Signup) by James Ho
+*/
+-->
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -72,12 +77,6 @@
     </nav>
   </div>
   <!--End of Navbar-->
-  
-
-  
-  
-  
-  
   
   <!--Main text headers-->
   <div class="container center-block text-center">
