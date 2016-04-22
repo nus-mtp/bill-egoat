@@ -1,9 +1,7 @@
 <?php
 
 //@Author James Ho, refactored by Tan Tack Poh
-
 /*Bill Template System
-
 */   
 class Templates_model extends CI_Model {
 
@@ -35,7 +33,6 @@ class Templates_model extends CI_Model {
 	// @Reviewer Daryl Lim, Tack Poh
     // Write into SQL table the coordinates data of parts of template (table is templatedb -> datafields)
     public function insert_datafields_table($templateCoords,$templateID)
-
     {
         $dataLogo = array
 		(
@@ -112,17 +109,18 @@ class Templates_model extends CI_Model {
         $this->templatedb->insert('logo', $dataLogoFilePath);
 
     }
-    
-    // @Author James Ho
-    // Obtain Template ID
-    public function get_template_id($billOrgName)        
-    {
-        $this->templatedb->select('templateID');
-        $this->templatedb->where('billOrg', $billOrgName);
-        $query = $this->templatedb->get('templates');
-        $result = $query->result();
+	
+	// @Author James Ho
+	// @Reviewer Daryl Lim
+	// Obtain Template ID
+	public function get_template_id($billOrgName)        
+	{
+		$this->templatedb->select('templateID');
+		$this->templatedb->where('billOrg', $billOrgName);
+		$query = $this->templatedb->get('templates');
+		$result = $query->result();
 
-		if (empty($result))
+		if (empty($result)) // Cannot find organisation
 		{
 			$template_id = 0;
 		}
@@ -130,14 +128,11 @@ class Templates_model extends CI_Model {
 		{
 			$template_id = $result[0]->templateID;
 		}
-
-        return $template_id;
-        
-    }
-
-        
+		return $template_id;
+	}
+	
     // @Author Daryl Lim
-    // Obtain The entire column consisting of templateID
+    // Obtain the entire column consisting of templateID
     public function get_templates()        
     {
         $this->templatedb->select('templateID');

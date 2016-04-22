@@ -48,9 +48,6 @@ class AddBill extends CI_Controller {
 		
 		// Attempt upload of image
 		$imgName = $this->Maddbill_model->upload();
-
-        // Validate Billing organisation
-		$this->form_validation->set_rules('billOrg', 'Billing Organisation', 'alpha_numeric');
 		
 		// Validate image extension
 		if ($this->chk_ext($imgName) == FALSE)
@@ -62,6 +59,12 @@ class AddBill extends CI_Controller {
 		if ($this->chk_size($imgName) == FALSE)
 		{
 			$this->form_validation->set_rules('image','Bill Image','callback_fsize');
+		}
+		
+		// Validate file uploaded
+		if ($imgName == NULL)
+		{
+			$this->form_validation->set_rules('image','Bill Image','required');
 		}
 		
 		// Routing after failing validation
@@ -81,14 +84,14 @@ class AddBill extends CI_Controller {
 			// Retrieve bill info
 			$data['bills_id'] = $this->Graph_model->get_graphdata($billID, 0);
 			$data['tags'] = $this->Maddbill_model->get_tags($billID);
-            
-            // Retrieve template info
-            $templateID = $this->Templates_model->get_template_id($this->input->post('billOrg'));
-            
+			
+			// Retrieve template info
+			$templateID = $this->Templates_model->get_template_id($this->input->post('billOrg'));
+			
+			// Test all templates and determine best match
             if ($templateID == 0)
             {
                 $tempIDArr = $this->Templates_model->get_templates();
-
                 $average = INF;
                 $detectedOrg = "Unknown";
                 foreach ($tempIDArr as $row)
@@ -105,20 +108,23 @@ class AddBill extends CI_Controller {
                 }
 
                 $data['templateID'] = $detectedOrg;
-                $this->Maddbill_model->update_bill_auto($billID, $detectedOrg); 
-                // Take billID and templateID, pass into and run ocr function in background
-                $data['filename'] = $this->Templates_model->ocr($billID,$detectedOrg);
+
+				if ($detectedOrg != "Unknown")
+				{
+					// Update bill with detected organisation's template.
+					$this->Maddbill_model->update_bill_auto($billID, $detectedOrg);
+					
+					// Take billID and templateID, pass into and run ocr function in background
+					$data['filename'] = $this->Templates_model->ocr($billID,$detectedOrg);
+				}
             }
             else
             {
-                // Run logo recognition to retrieve the best matched billing organisation name
                 $data['templateID'] = $templateID;
                 // Take billID and templateID, pass into and run ocr function in background
                 $data['filename'] = $this->Templates_model->ocr($billID,$templateID);
             }
 
-            
-            
 			// Retrieve updated bill info
 			$data['bills_id'] = $this->Graph_model->get_graphdata($billID, 0);
 			$data['tags'] = $this->Maddbill_model->get_tags($billID);
@@ -129,7 +135,6 @@ class AddBill extends CI_Controller {
 			$data['include'] = 'updateBill_view';
 			$this->load->vars($data);
 			$this->load->view('template');
-            
 		}
 	}
 	

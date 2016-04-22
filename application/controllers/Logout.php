@@ -12,7 +12,13 @@ class Logout extends CI_Controller{
 	public function index()
 	{
 		$this->session->sess_destroy();
-		$this->load->view('welcome_message');
+		
+		$data['title'] = "";
+		$data['headline'] = "";
+		$data['include'] = 'welcome_message';
+		$this->load->vars($data);
+		
+		$this->load->view('template');
 	}
 }
 ?>
